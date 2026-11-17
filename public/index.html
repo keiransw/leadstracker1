@@ -59,6 +59,13 @@ main{padding:16px 20px;max-width:100%}
 .chip{border:1px solid #d3d6da;background:#fff;border-radius:99px;padding:3px 11px;font-size:13px}
 .chip.on{background:#1c1f23;color:#fff;border-color:#1c1f23}
 .chip small{opacity:.65;margin-left:4px}
+.chip .ren{margin-left:6px;opacity:.45;font-size:12px;padding:0 2px;border-radius:4px}
+.chip .ren:hover{opacity:1;background:rgba(127,127,127,.2)}
+.chip-in{border:1px solid #2563eb;border-radius:99px;padding:3px 11px;font-size:13px;outline:0;width:160px}
+.indrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#f6f7f8;border:1px solid #e3e5e8;border-radius:8px;padding:10px 12px;margin:10px 0}
+.indrow b{font-weight:600}
+.indrow select,.indrow input{border:1px solid #d3d6da;border-radius:7px;padding:6px 8px;background:#fff}
+.indrow.need{border-color:#f2b8b5;background:#fff5f4}
 .tw{overflow:auto;max-height:78vh}
 table{border-collapse:separate;border-spacing:0;width:100%}
 th,td{padding:6px 10px;border-bottom:1px solid #eef0f2;text-align:left;white-space:nowrap;vertical-align:middle}
@@ -213,8 +220,12 @@ body.dragging{user-select:none;cursor:row-resize}
     <label class="btn small" style="cursor:pointer">…or load an Excel / CSV file<input type="file" id="impF" accept=".xlsx,.xls,.csv,.tsv" hidden></label>
     <label><input type="checkbox" id="impH"> First row is a header</label>
     <label><input type="checkbox" id="impD" checked> Skip duplicates</label>
-    <span class="sp"></span>
-    <span>Industry for all:</span><input type="text" id="impI" list="indList" style="width:170px" placeholder="e.g. Restaurants">
+  </div>
+  <div class="indrow" id="impIndRow">
+    <b>Industry for these leads:</b>
+    <select id="impSel"></select>
+    <input type="text" id="impI" placeholder="New industry name, e.g. Hair salons" style="width:240px;display:none">
+    <span id="impIndHint" style="font-size:12.5px;color:#5b6168"></span>
   </div>
   <div class="prev" id="impP"></div>
   <div class="foot"><span id="impMsg" style="color:#5b6168;margin-right:auto"></span><button class="btn" id="impX">Cancel</button><button class="btn primary" id="impGo" disabled>Import</button></div>
@@ -369,7 +380,7 @@ function renderChips(){
   ui.inds=ui.inds.filter(k=>m.has(k));
   const keys=[...m.keys()].sort((a,b)=>a===''?1:b===''?-1:a<b?-1:1);
   $('#chips').innerHTML='<span class="lbl">Industry</span>'+`<button class="chip ${ui.inds.length?'':'on'}" data-ind="*">All<small>${leads.length}</small></button>`+
-    keys.map(k=>`<button class="chip ${ui.inds.includes(k)?'on':''}" data-ind="${esc(k)}">${k?esc(m.get(k).label):'No industry'}<small>${m.get(k).n}</small></button>`).join('');
+    keys.map(k=>`<button class="chip ${ui.inds.includes(k)?'on':''}" data-ind="${esc(k)}">${k?esc(m.get(k).label):'No industry'}<small>${m.get(k).n}</small><span class="ren" data-ren title="Rename industry">✎</span></button>`).join('');
   $('#indList').innerHTML=keys.filter(Boolean).map(k=>`<option value="${esc(m.get(k).label)}">`).join('');
 }
 function cell(l,k){
@@ -526,8 +537,28 @@ $('#q').addEventListener('input',e=>{ui.q=e.target.value;justAdded=null;renderTa
 function renderTableKeepFocus(){const s=$('#q').selectionStart;renderTable();syncSel();$('#q').focus();$('#q').setSelectionRange(s,s)}
 [['#fWeb','web'],['#fCon','con'],['#fRep','rep']].forEach(([s,k])=>$(s).addEventListener('change',e=>{ui[k]=e.target.value;justAdded=null;saveUi();renderTable();syncSel()}));
 $('#bClear').onclick=()=>{ui.q='';ui.web=ui.con=ui.rep='';ui.inds=[];justAdded=null;saveUi();renderChips();renderTable();syncSel()};
+function canonInd(name){const k=name.trim().toLowerCase(),m=indCounts();return m.has(k)&&k?m.get(k).label:name.trim()}
+function renameChip(chip){
+  const k=chip.dataset.ind,m=indCounts(),cur=k?m.get(k).label:'';
+  const inp=document.createElement('input');inp.className='chip-in';inp.value=cur;inp.placeholder='Industry name';
+  chip.replaceWith(inp);inp.focus();inp.select();
+  let done=false;
+  const finish=save=>{
+    if(done)return;done=true;
+    const v=inp.value.trim();
+    if(!save||!v||v===cur){renderChips();return}
+    const label=canonInd(v),nk=label.toLowerCase(),n=m.get(k).n;
+    mutate(()=>{
+      leads.forEach(l=>{if(l.industry.trim().toLowerCase()===k)l.industry=label});
+      if(ui.inds.includes(k))ui.inds=[...new Set(ui.inds.map(x=>x===k?nk:x))];saveUi();
+    },`${n} lead${n===1?'':'s'} moved to “${label}”`);
+  };
+  inp.addEventListener('blur',()=>finish(true));
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur();else if(e.key==='Escape'){e.stopPropagation();finish(false)}});
+}
 $('#chips').addEventListener('click',e=>{
   const c=e.target.closest('[data-ind]');if(!c)return;const k=c.dataset.ind;
+  if(e.target.closest('[data-ren]')){e.preventDefault();return renameChip(c)}
   if(k==='*')ui.inds=[];else ui.inds=ui.inds.includes(k)?ui.inds.filter(x=>x!==k):[...ui.inds,k];
   justAdded=null;saveUi();renderChips();renderTable();syncSel();
 });
@@ -619,12 +650,12 @@ function setImp(rows){
   renderImp();
 }
 function impLeads(){
-  const data=$('#impH').checked?imp.rows.slice(1):imp.rows,ind=$('#impI').value.trim(),out=[];let dup=0;
+  const data=$('#impH').checked?imp.rows.slice(1):imp.rows,ind=impIndustry(),out=[];let dup=0;
   const seen=new Set(leads.map(l=>l.business.trim().toLowerCase()+'|'+digits(l.phone)+'|'+l.email.trim().toLowerCase()));
   for(const r of data){
     const l=blank();
     imp.map.forEach((f,i)=>{if(!f)return;if(f==='website')l.website=ynVal(r[i]);else l[f]=l[f]?l[f]+' '+r[i]:r[i]});
-    if(!l.industry)l.industry=ind;
+    l.industry=l.industry?canonInd(l.industry):ind;
     if(!l.business&&!l.email&&!l.phone)continue;
     const key=l.business.toLowerCase()+'|'+digits(l.phone)+'|'+l.email.toLowerCase();
     if($('#impD').checked&&seen.has(key)){dup++;continue}
@@ -638,11 +669,20 @@ function renderImp(){
   const data=($('#impH').checked?imp.rows.slice(1):imp.rows).slice(0,8);
   p.innerHTML='<table><thead><tr>'+imp.map.map((m,i)=>`<th><select data-map="${i}">${FIELDS.map(([k,lab])=>`<option value="${k}" ${k===m?'selected':''}>${lab}</option>`).join('')}</select></th>`).join('')+'</tr></thead><tbody>'+
     data.map(r=>'<tr>'+r.map(c=>`<td>${esc(c)}</td>`).join('')+'</tr>').join('')+'</tbody></table>';
-  const{out,dup}=impLeads();
-  $('#impGo').disabled=!out.length;$('#impGo').textContent=`Import ${out.length} lead${out.length===1?'':'s'}`;
+  const{out,dup}=impLeads(),hasCol=imp.map.includes('industry'),ind=impIndustry(),need=!ind&&!hasCol;
+  $('#impIndRow').classList.toggle('need',need);
+  $('#impIndHint').textContent=hasCol?'Used only for rows with a blank Industry column.':need?'Required':'';
+  $('#impGo').disabled=!out.length||need;$('#impGo').textContent=`Import ${out.length} lead${out.length===1?'':'s'}`+(ind?` to ${ind}`:'');
   $('#impMsg').textContent=(dup?`${dup} duplicate${dup===1?'':'s'} will be skipped. `:'')+(imp.map.includes('business')?'':'No column is set as Business name.');
 }
-$('#bPaste').onclick=()=>{$('#impT').value='';$('#impI').value='';imp={rows:[],map:[]};renderImp();$('#impO').classList.add('show');$('#impT').focus()};
+function impIndustry(){const v=$('#impSel').value;return v==='__new'?canonInd($('#impI').value):v}
+function fillImpSel(){
+  const m=indCounts(),labs=[...m.keys()].filter(Boolean).sort().map(k=>m.get(k).label);
+  $('#impSel').innerHTML='<option value="">Choose industry…</option>'+labs.map(l=>`<option value="${esc(l)}">${esc(l)}</option>`).join('')+'<option value="__new">+ Add an industry…</option>';
+  $('#impI').style.display='none';$('#impI').value='';
+}
+$('#impSel').onchange=()=>{const n=$('#impSel').value==='__new';$('#impI').style.display=n?'':'none';if(n)$('#impI').focus();renderImp()};
+$('#bPaste').onclick=()=>{$('#impT').value='';fillImpSel();imp={rows:[],map:[]};renderImp();$('#impO').classList.add('show');$('#impT').focus()};
 $('#impT').addEventListener('input',e=>setImp(parseText(e.target.value)));
 $('#impH').onchange=renderImp;$('#impD').onchange=renderImp;$('#impI').oninput=renderImp;
 $('#impP').addEventListener('change',e=>{if(e.target.dataset.map!==undefined){const i=+e.target.dataset.map,v=e.target.value;if(v)imp.map=imp.map.map(x=>x===v?'':x);imp.map[i]=v;renderImp()}});

@@ -141,6 +141,18 @@ body.dragging{user-select:none;cursor:row-resize}
 .modal label.f{display:block;font-size:12.5px;color:#5b6168;margin:10px 0 4px}
 .prev{overflow:auto;border:1px solid #e3e5e8;border-radius:8px;max-height:260px}
 .prev th{position:static;cursor:default}
+.dg{border:1px solid #e3e5e8;border-radius:9px;margin-bottom:10px;overflow:hidden}
+.dg.off{opacity:.5}
+.dg header{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f6f7f8;border-bottom:1px solid #e3e5e8;font-size:13px}
+.dg header .why{color:#5b6168}
+.dg .r{display:flex;gap:10px;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f1f3;font-size:13px}
+.dg .r:last-child{border-bottom:0}
+.dg .r .nm{font-weight:600;width:230px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dg .r .mt{color:#5b6168;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dg .tag{font-size:11.5px;border-radius:99px;padding:1px 8px;font-weight:600;white-space:nowrap}
+.dg .tag.keep{background:#dcfce7;color:#166534}
+.dg .tag.go{background:#eceef1;color:#6b7280}
+.dupList{max-height:60vh;overflow:auto;margin-top:10px}
 .prev select{border:1px solid #d3d6da;border-radius:6px;padding:3px;background:#fff;font-weight:600}
 .prev td{max-width:220px;overflow:hidden;text-overflow:ellipsis}
 .hist{font-size:12.5px;color:#5b6168;margin-top:10px}
@@ -159,6 +171,7 @@ body.dragging{user-select:none;cursor:row-resize}
   <button class="btn primary" id="bPaste">Paste leads</button>
   <button class="btn" id="bAdd">+ Add lead</button>
   <button class="btn" id="bCols">Columns ▾</button>
+  <button class="btn" id="bDup">Duplicates</button>
   <button class="btn" id="bUndo" disabled>Undo</button>
   <span class="sp"></span>
   <span class="status" id="status"></span>
@@ -229,6 +242,13 @@ body.dragging{user-select:none;cursor:row-resize}
   </div>
   <div class="prev" id="impP"></div>
   <div class="foot"><span id="impMsg" style="color:#5b6168;margin-right:auto"></span><button class="btn" id="impX">Cancel</button><button class="btn primary" id="impGo" disabled>Import</button></div>
+</div></div>
+
+<div class="overlay" id="dupO"><div class="modal">
+  <h3>Duplicate leads</h3>
+  <p>Leads count as duplicates when they share an email, a phone number or the exact business name. Each group is merged into one lead: contact counts and history are added together, notes are combined, and blank fields are filled in from the copies. Untick a group to leave it alone.</p>
+  <div class="dupList" id="dupL"></div>
+  <div class="foot"><span id="dupMsg" style="color:#5b6168;margin-right:auto"></span><button class="btn" id="dupX">Close</button><button class="btn primary" id="dupGo">Merge</button></div>
 </div></div>
 
 <div class="overlay" id="noteO"><div class="modal narrow">
@@ -598,7 +618,7 @@ $('#bDesel').onclick=()=>{selected.clear();syncSel()};
 $('#bUndo').onclick=doUndo;
 document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!e.target.closest('input,textarea')){e.preventDefault();doUndo()}
-  if(e.key==='Escape'){closeNotes();$('#impO').classList.remove('show');$('#colPop').classList.remove('show')}
+  if(e.key==='Escape'){closeNotes();$('#dupO').classList.remove('show');$('#impO').classList.remove('show');$('#colPop').classList.remove('show')}
 });
 $('#bAdd').onclick=()=>{
   const l=blank();justAdded=l.id;
@@ -697,6 +717,60 @@ $('#impGo').onclick=()=>{
   const{out,dup}=impLeads();if(!out.length)return;
   $('#impO').classList.remove('show');
   mutate(()=>{leads=leads.concat(out)},`Imported ${out.length} lead${out.length===1?'':'s'}${dup?` · ${dup} duplicate${dup===1?'':'s'} skipped`:''}`);
+};
+
+/* ---------- duplicates ---------- */
+const normName=s=>String(s||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,' ').trim();
+const normPhone=s=>{const d=digits(s);return d.length>=8?d.slice(-8):''};
+const normEmail=s=>String(s||'').trim().toLowerCase();
+function findDups(){
+  const parent=leads.map((_,i)=>i),find=i=>parent[i]===i?i:(parent[i]=find(parent[i]));
+  const why=new Map(),seen={email:new Map(),phone:new Map(),name:new Map()};
+  leads.forEach((l,i)=>{
+    [['email',normEmail(l.email)],['phone',normPhone(l.phone)],['name',normName(l.business)]].forEach(([t,k])=>{
+      if(!k)return;const m=seen[t];
+      if(m.has(k)){const a=find(m.get(k)),b=find(i);if(a!==b)parent[b]=a;const r=find(i);why.set(r,(why.get(r)||new Set()).add(t))}
+      else m.set(k,i);
+    });
+  });
+  const groups=new Map();leads.forEach((l,i)=>{const r=find(i);if(!groups.has(r))groups.set(r,[]);groups.get(r).push(l)});
+  const label={email:'same email',phone:'same phone',name:'same name'};
+  return [...groups.entries()].filter(([,g])=>g.length>1).map(([r,g])=>{
+    const reasons=new Set();g.forEach(l=>{const w=why.get(find(leads.indexOf(l)));if(w)w.forEach(x=>reasons.add(x))});
+    const score=l=>total(l)*100+(l.notes?10:0)+(l.owner?5:0)+(l.replied?50:0)+l.interest;
+    const keep=g.slice().sort((a,b)=>score(b)-score(a)||leads.indexOf(a)-leads.indexOf(b))[0];
+    return{keep,rest:g.filter(l=>l!==keep),why:[...reasons].map(x=>label[x]).join(', ')||'match',on:true};
+  });
+}
+function mergeInto(k,others){
+  for(const o of others){
+    ['business','owner','email','phone','industry'].forEach(f=>{if(!k[f]&&o[f])k[f]=o[f]});
+    METHODS.forEach(m=>k[m.k]+=o[m.k]);
+    k.hist=k.hist.concat(o.hist);
+    if(o.notes&&!k.notes.includes(o.notes))k.notes=k.notes?k.notes+'\n'+o.notes:o.notes;
+    k.replied=k.replied||o.replied;k.website=k.website||o.website;k.interest=Math.max(k.interest,o.interest);
+    if(o.next&&(!k.next||o.next<k.next))k.next=o.next;
+  }
+  k.hist.sort();
+}
+let dups=[];
+function renderDups(){
+  const L=$('#dupL');
+  if(!dups.length){L.innerHTML='<div class="empty">No duplicates found.</div>';$('#dupGo').style.display='none';$('#dupMsg').textContent='';return}
+  $('#dupGo').style.display='';
+  const row=(l,k)=>`<div class="r"><span class="tag ${k?'keep':'go'}">${k?'Keep':'Merge in'}</span><span class="nm">#${leads.indexOf(l)+1} ${esc(l.business)||'(no name)'}</span><span class="mt">${[l.email,l.phone,l.industry,total(l)?total(l)+' contact'+(total(l)===1?'':'s'):''].filter(Boolean).map(esc).join(' · ')}</span></div>`;
+  L.innerHTML=dups.map((d,i)=>`<div class="dg ${d.on?'':'off'}"><header><input type="checkbox" data-dg="${i}" ${d.on?'checked':''}><b>${d.rest.length+1} leads</b><span class="why">${esc(d.why)}</span></header>${row(d.keep,true)}${d.rest.map(l=>row(l,false)).join('')}</div>`).join('');
+  const on=dups.filter(d=>d.on),n=on.reduce((a,d)=>a+d.rest.length,0);
+  $('#dupMsg').textContent=`${dups.length} group${dups.length===1?'':'s'} found`;
+  $('#dupGo').textContent=n?`Merge ${on.length} group${on.length===1?'':'s'} (removes ${n} lead${n===1?'':'s'})`:'Merge';$('#dupGo').disabled=!n;
+}
+$('#bDup').onclick=()=>{dups=findDups();renderDups();$('#dupO').classList.add('show')};
+$('#dupL').addEventListener('change',e=>{if(e.target.dataset.dg!==undefined){dups[+e.target.dataset.dg].on=e.target.checked;renderDups()}});
+$('#dupX').onclick=()=>$('#dupO').classList.remove('show');
+$('#dupGo').onclick=()=>{
+  const on=dups.filter(d=>d.on),n=on.reduce((a,d)=>a+d.rest.length,0);if(!n)return;
+  $('#dupO').classList.remove('show');
+  mutate(()=>{const ids=new Set();on.forEach(d=>{const k=byId(d.keep.id),r=d.rest.map(l=>byId(l.id));mergeInto(k,r);r.forEach(l=>ids.add(l.id))});leads=leads.filter(l=>!ids.has(l.id))},`Merged duplicates · removed ${n} lead${n===1?'':'s'}`);
 };
 
 /* ---------- toast ---------- */

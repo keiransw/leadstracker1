@@ -76,6 +76,10 @@ th.dragging{opacity:.4}
 th.drop-l{box-shadow:inset 3px 0 0 #2563eb}
 th.drop-r{box-shadow:inset -3px 0 0 #2563eb}
 .pop .hint{font-size:12px;color:#5b6168;padding:2px 6px 6px}
+#copyPop{min-width:250px}
+#copyPop .cols{max-height:46vh;overflow:auto;border-top:1px solid #eceef0;border-bottom:1px solid #eceef0;margin:4px 0;padding:4px 0}
+#copyPop .opt{font-size:12.5px}
+#copyPop .scope{font-size:12.5px;color:#1c1f23;padding:2px 6px 6px;font-weight:600}
 tbody tr{background:#fff}
 tbody tr:hover{background:#fafbfc}
 td.num{position:sticky;left:0;background:inherit;z-index:2}
@@ -171,6 +175,7 @@ body.dragging{user-select:none;cursor:row-resize}
   <button class="btn primary" id="bPaste">Paste leads</button>
   <button class="btn" id="bAdd">+ Add lead</button>
   <button class="btn" id="bCols">Columns ▾</button>
+  <button class="btn" id="bCopy">Copy ▾</button>
   <button class="btn" id="bDup">Duplicates</button>
   <button class="btn" id="bUndo" disabled>Undo</button>
   <span class="sp"></span>
@@ -203,6 +208,7 @@ body.dragging{user-select:none;cursor:row-resize}
 </main>
 
 <div class="pop" id="colPop"></div>
+<div class="pop" id="copyPop"></div>
 <datalist id="indList"></datalist>
 
 <div class="bulk" id="bulk">
@@ -222,6 +228,7 @@ body.dragging{user-select:none;cursor:row-resize}
   <input id="bInd" placeholder="Set industry…" list="indList">
   <span class="sepr"></span>
   <button class="btn danger" id="bDel">Remove</button>
+  <button class="btn" id="bCopySel">Copy…</button>
   <button class="btn" id="bDesel">Clear</button>
 </div>
 
@@ -598,7 +605,78 @@ $('#colPop').addEventListener('click',e=>{
   else return;
   saveUi();renderTable();syncSel();
 });
-document.addEventListener('click',()=>$('#colPop').classList.remove('show'));
+document.addEventListener('click',()=>{$('#colPop').classList.remove('show');$('#copyPop').classList.remove('show')});
+
+/* ---------- copy columns ---------- */
+function plain(l,k){
+  const t=total(l);
+  switch(k){
+    case 'website':return l.website?'Yes':'No';
+    case 'contacted':return t?'Yes':'No';
+    case 'replied':return l.replied?'Yes':'No';
+    case 'total':return String(t);
+    case 'e':case 'p':case 'w':case 'm':return String(l[k]);
+    case 'interest':return l.interest?String(l.interest):'';
+    case 'last':{const a=lastOf(l);return a?fmtD(a.date)+' ('+a.m.short+')':''}
+    case 'next':return fmtD(l.next);
+    case 'notes':return l.notes.replace(/\s*\n\s*/g,' / ');
+    default:return String(l[k]??'').trim();
+  }
+}
+const isBlankVal=v=>!v||PLACEHOLDER.test(v.trim());
+function copyScope(){const sel=leads.filter(l=>selected.has(l.id));return sel.length?{rows:visible().filter(l=>selected.has(l.id)).concat(sel.filter(l=>!visibleIds.includes(l.id))),label:`${sel.length} selected lead${sel.length===1?'':'s'}`}:{rows:visible(),label:`the ${visibleIds.length} lead${visibleIds.length===1?'':'s'} shown`}}
+if(!ui.copyCols)ui.copyCols=['business','email'];
+if(ui.copyHead===undefined)ui.copyHead=false;
+if(ui.copySkip===undefined)ui.copySkip=true;
+function renderCopyPop(){
+  const sc=copyScope();
+  $('#copyPop').innerHTML=`<div class="scope">Copy ${sc.label}</div><div class="hint">Tick the columns to copy. They paste into Excel or Sheets as separate columns.</div>
+    <div class="cols">${orderedCols().map(c=>`<label><input type="checkbox" data-cc="${c.k}" ${ui.copyCols.includes(c.k)?'checked':''}> ${c.label}</label>`).join('')}</div>
+    <label class="opt"><input type="checkbox" id="ccHead" ${ui.copyHead?'checked':''}> Include column names</label>
+    <label class="opt"><input type="checkbox" id="ccSkip" ${ui.copySkip?'checked':''}> Skip leads with a blank or “Not Found” value</label>
+    <div style="display:flex;gap:6px;margin-top:8px;align-items:center"><button class="btn primary small" id="ccGo">Copy</button><span id="ccMsg" style="font-size:12.5px;color:#5b6168"></span></div>`;
+  updCopyMsg();
+}
+function copyData(){
+  const keys=orderedCols().map(c=>c.k).filter(k=>ui.copyCols.includes(k));
+  let rows=copyScope().rows.map(l=>keys.map(k=>plain(l,k)));
+  const before=rows.length;
+  if(ui.copySkip)rows=rows.filter(r=>r.every(v=>!isBlankVal(v)));
+  const lines=rows.map(r=>r.map(v=>v.replace(/[\t\r\n]+/g,' ')).join('\t'));
+  if(ui.copyHead&&lines.length)lines.unshift(keys.map(k=>COLS.find(c=>c.k===k).label).join('\t'));
+  return{text:lines.join('\n'),n:rows.length,skipped:before-rows.length,cols:keys.length};
+}
+function updCopyMsg(){
+  const d=copyData(),m=$('#ccMsg'),b=$('#ccGo');if(!m)return;
+  b.disabled=!d.cols||!d.n;
+  m.textContent=!d.cols?'Tick at least one column':`${d.n} row${d.n===1?'':'s'}`+(d.skipped?` · ${d.skipped} skipped`:'');
+}
+function openCopy(btn){
+  const p=$('#copyPop');if(p.classList.contains('show')){p.classList.remove('show');return}
+  $('#colPop').classList.remove('show');renderCopyPop();p.classList.add('show');
+  const r=btn.getBoundingClientRect(),w=p.offsetWidth,h=p.offsetHeight;
+  let left=Math.min(r.left,innerWidth-w-10),top=r.bottom+6;
+  if(top+h>innerHeight-10)top=Math.max(10,r.top-h-6);
+  p.style.left=left+scrollX+'px';p.style.top=top+scrollY+'px';
+}
+async function writeClip(text){
+  try{await navigator.clipboard.writeText(text);return true}catch(e){}
+  const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;left:-9999px;top:0';document.body.appendChild(ta);ta.select();
+  let ok=false;try{ok=document.execCommand('copy')}catch(e){}ta.remove();return ok;
+}
+$('#bCopy').onclick=e=>{e.stopPropagation();openCopy(e.currentTarget)};
+$('#bCopySel').onclick=e=>{e.stopPropagation();openCopy(e.currentTarget)};
+$('#copyPop').addEventListener('click',async e=>{
+  e.stopPropagation();const t=e.target;
+  if(t.dataset.cc){const k=t.dataset.cc;ui.copyCols=t.checked?[...ui.copyCols,k]:ui.copyCols.filter(x=>x!==k);saveUi();updCopyMsg();return}
+  if(t.id==='ccHead'){ui.copyHead=t.checked;saveUi();return}
+  if(t.id==='ccSkip'){ui.copySkip=t.checked;saveUi();updCopyMsg();return}
+  if(t.id==='ccGo'){
+    const d=copyData();if(!d.n)return;
+    if(await writeClip(d.text)){$('#copyPop').classList.remove('show');toast(`Copied ${d.n} row${d.n===1?'':'s'} × ${d.cols} column${d.cols===1?'':'s'}`)}
+    else $('#ccMsg').textContent='Copy was blocked by the browser.';
+  }
+});
 
 /* ---------- bulk ---------- */
 const selLeads=()=>leads.filter(l=>selected.has(l.id));
@@ -618,7 +696,7 @@ $('#bDesel').onclick=()=>{selected.clear();syncSel()};
 $('#bUndo').onclick=doUndo;
 document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!e.target.closest('input,textarea')){e.preventDefault();doUndo()}
-  if(e.key==='Escape'){closeNotes();$('#dupO').classList.remove('show');$('#impO').classList.remove('show');$('#colPop').classList.remove('show')}
+  if(e.key==='Escape'){$('#copyPop').classList.remove('show');closeNotes();$('#dupO').classList.remove('show');$('#impO').classList.remove('show');$('#colPop').classList.remove('show')}
 });
 $('#bAdd').onclick=()=>{
   const l=blank();justAdded=l.id;

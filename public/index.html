@@ -720,9 +720,11 @@ $('#impGo').onclick=()=>{
 };
 
 /* ---------- duplicates ---------- */
-const normName=s=>String(s||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,' ').trim();
-const normPhone=s=>{const d=digits(s);return d.length>=8?d.slice(-8):''};
-const normEmail=s=>String(s||'').trim().toLowerCase();
+// placeholder values from scrapers ("Not Found", "N/A", "-") never count as a match
+const PLACEHOLDER=/^(not found|notfound|not available|n\/?a|na|none|null|nil|unknown|no ?(email|e-mail|phone|number|name|website|data|info)|missing|empty|tbd|tba|-+|\.+|\?+|0+)$/i;
+const normName=s=>{const t=String(s||'').trim();if(PLACEHOLDER.test(t))return '';return t.toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,' ').trim()};
+const normPhone=s=>{const d=digits(s);if(d.length<8)return '';const k=d.slice(-8);return /^(\d)\1+$/.test(k)||/^(12345678|87654321)$/.test(k)?'':k};
+const normEmail=s=>{const t=String(s||'').trim().toLowerCase();return /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/.test(t)?t:''};
 function findDups(){
   const parent=leads.map((_,i)=>i),find=i=>parent[i]===i?i:(parent[i]=find(parent[i]));
   const why=new Map(),seen={email:new Map(),phone:new Map(),name:new Map()};

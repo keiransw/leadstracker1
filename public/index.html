@@ -130,8 +130,15 @@ details.tbl summary{cursor:pointer;color:#5b6168}
 details.tbl table{margin-top:6px;font-size:12.5px}
 details.tbl th{position:static;cursor:default}
 details.tbl td{font-variant-numeric:tabular-nums}
+.tg{border:0;background:none;width:22px;height:22px;border-radius:5px;padding:0;color:#4a5057;font-size:11px;vertical-align:middle;margin-right:4px;transition:transform .15s}
+.tg:hover{background:#eef0f2}
+.tg.open{transform:rotate(90deg)}
+.scnum{color:#6b7280;font-weight:600;margin-right:6px;font-variant-numeric:tabular-nums}
+.sctbl tr.full td{padding:4px 12px 12px 62px;border-bottom:1px solid #f0f1f3}
+.sctbl tr.full .txt{white-space:pre-wrap;background:#fafbfc;border:1px solid #eceef0;border-radius:8px;padding:10px 12px;font-size:13px;color:#1c1f23;max-width:760px}
+.sctbl tr[data-sctog],.sctbl tr[data-sttog]{cursor:pointer}
 .sctbl tr.step td{padding-top:5px;padding-bottom:5px;font-size:12.5px;border-bottom-color:#f4f5f6}
-.sctbl tr.step td:first-child{padding-left:26px}
+.sctbl tr.step td:first-child{padding-left:34px}
 .sctbl tr.step .snm2{font-weight:600;color:#33373d}
 .sctbl tr.step .prev{font-size:12px}
 .sctbl tr.pos td{background:#fafbfc;font-size:12.5px;padding-top:6px;padding-bottom:6px}
@@ -1169,26 +1176,28 @@ function scriptStats(){
 function renderScripts(){
   const{st,pos}=scriptStats(),z={uses:0,leads:new Set(),replies:0,steps:new Map()};
   const nums=x=>{const n=x.leads.size,rt=n?Math.round(x.replies/n*100):0;return `<td class="n">${n}</td><td class="n">${x.replies}</td><td class="n"><div class="rate"><b>${n?rt+'%':'–'}</b><div class="bar"><i style="width:${rt}%"></i></div></div></td><td class="n">${x.uses}</td>`};
-  const row=(sc,x)=>{
-    const fu=sc.followups||[],code=MBY[sc.method].code,maxUsed=Math.max(-1,...x.steps.keys()),n=Math.max(fu.length,maxUsed);
-    let h=`<tr data-sc="${sc.id}"><td><div class="snm" data-sced>${esc(sc.name)}</div><div class="prev">${fu.length?plural(fu.length,'follow-up')+' · ':''}${esc(sc.text.replace(/\s+/g,' ').slice(0,120))}</div></td>${nums(x)}
+  if(!ui.scOpen)ui.scOpen={};if(!ui.stOpen)ui.stOpen={};
+  const row=(sc,x,num)=>{
+    const fu=sc.followups||[],code=MBY[sc.method].code,maxUsed=Math.max(-1,...x.steps.keys()),n=Math.max(fu.length,maxUsed),open=!!ui.scOpen[sc.id];
+    let h=`<tr data-sc="${sc.id}" data-sctog><td><button class="tg ${open?'open':''}" aria-label="${open?'Collapse':'Expand'}">▶</button><span class="scnum">${num}.</span><span class="snm">${esc(sc.name)}</span><div class="prev" style="padding-left:30px">${fu.length?plural(fu.length,'follow-up'):'No follow-ups'}${sc.text?' · '+esc(sc.text.replace(/\s+/g,' ').slice(0,110)):''}</div></td>${nums(x)}
       <td class="n"><button class="btn small" data-scadd title="Credit leads you contacted earlier to this script">Add past contacts</button> <button class="btn small" data-sced>Edit</button></td></tr>`;
-    if(n>0||fu.length)for(let i=0;i<=n;i++){const t=i===0?sc.text:fu[i-1],y=x.steps.get(i)||{uses:0,leads:new Set(),replies:0};
-      h+=`<tr class="step" data-sc="${sc.id}" data-step="${i}"><td><span class="snm2">↳ ${stepName(code,i)}</span>${t?` <span class="prev" style="display:inline">${esc(t.replace(/\s+/g,' ').slice(0,90))}</span>`:i>fu.length?' <span class="prev" style="display:inline">(no text saved)</span>':''}</td>${nums(y)}<td class="n">${t?`<button class="btn small" data-sccopy="${i}">Copy</button>`:''}</td></tr>`}
-    else h=h.replace('<button class="btn small" data-sced>Edit</button>','<button class="btn small" data-sccopy="0">Copy text</button> <button class="btn small" data-sced>Edit</button>');
+    if(open)for(let i=0;i<=n;i++){const t=i===0?sc.text:fu[i-1],y=x.steps.get(i)||{uses:0,leads:new Set(),replies:0},ko=sc.id+':'+i,so=!!ui.stOpen[ko]&&!!t;
+      h+=`<tr class="step" data-sc="${sc.id}" ${t?`data-sttog="${i}"`:''}><td>${t?`<button class="tg ${so?'open':''}" aria-label="${so?'Hide':'Show'} text">▶</button>`:'<span style="display:inline-block;width:26px"></span>'}<span class="snm2">${stepName(code,i)}</span>${!so&&t?` <span class="prev" style="display:inline">${esc(t.replace(/\s+/g,' ').slice(0,80))}</span>`:!t&&i>fu.length?' <span class="prev" style="display:inline">(no text saved)</span>':''}</td>${nums(y)}<td class="n">${t?`<button class="btn small" data-sccopy="${i}">Copy</button>`:''}</td></tr>`;
+      if(so)h+=`<tr class="full" data-sc="${sc.id}"><td colspan="6"><div class="txt">${esc(t)}</div></td></tr>`}
     return h;
   };
   const groups=METHODS.map(m=>{
-    const list=scripts.filter(x=>x.method===m.k).map(x=>({x,s:st.get(x.id)||z})).sort((a,b)=>{const ra=a.s.leads.size?a.s.replies/a.s.leads.size:-1,rb=b.s.leads.size?b.s.replies/b.s.leads.size:-1;return rb-ra||b.s.leads.size-a.s.leads.size||a.x.name.localeCompare(b.x.name)});
+    const list=scripts.filter(x=>x.method===m.k).map((x,i)=>({x,s:st.get(x.id)||z,n:i+1}));
     const none=st.get('none:'+m.code),pm=pos[m.code];
     const title={e:'Email',p:'Cold call',w:'WhatsApp',m:'Message'}[m.k],tl=m.k==='w'?title:title.toLowerCase();
     const posRows=pm?[...pm.keys()].sort((a,b)=>a-b).map(i=>`<tr class="pos"><td>${i===0?FIRSTW[m.code]:`Follow-up ${i} <span style="color:#6b7280">(${ORD(i+1)} ${m.short})</span>`}</td>${nums(pm.get(i))}<td></td></tr>`).join(''):'';
     return `<section class="card"><header style="cursor:default"><h2>${title} scripts</h2><span class="count ${list.length?'':'zero'}">${list.length}</span><span class="sp"></span><button class="btn small" data-scnew="${m.k}">+ New ${tl} script</button></header>
       ${list.length||none?`<div style="overflow:auto"><table class="sctbl"><thead><tr><th>Script</th><th>Leads contacted</th><th>Replies</th><th>Reply rate</th><th>Times used</th><th></th></tr></thead><tbody>
-      ${list.map(o=>row(o.x,o.s)).join('')}${none?`<tr class="none"><td><i>No script logged</i></td>${nums(none)}<td></td></tr>`:''}
+      ${list.map(o=>row(o.x,o.s,o.n)).join('')}${none?`<tr class="none"><td><i>No script logged</i></td>${nums(none)}<td></td></tr>`:''}
       ${posRows?`<tr class="posh"><td colspan="6">Which ${m.short} leads replied to — all ${m.short}s, any script</td></tr>${posRows}`:''}</tbody></table></div>`:`<div class="empty">No ${tl} scripts yet.</div>`}
     </section>`}).join('');
-  $('#vScripts').innerHTML=`<div class="vhead"><h2>Scripts</h2><p>Each script can have follow-ups. When you log a contact you pick the script and which message it was (it picks the next one in the sequence for you). Reply rate = replies ÷ leads that got that message. A reply is credited to the last message sent before the lead replied, so each reply only counts once. Use “Add past contacts” to credit leads you contacted before a script was set up.</p></div>${groups}`;
+  const allOpen=scripts.length&&scripts.every(x=>ui.scOpen[x.id]);
+  $('#vScripts').innerHTML=`<div class="vhead"><h2>Scripts</h2><span class="sp"></span>${scripts.length?`<button class="btn small" data-scall="${allOpen?0:1}">${allOpen?'Collapse all':'Expand all'}</button>`:''}</div>${groups}`;
 }
 let scEditing=null;
 function openSc(sc,method){
@@ -1219,7 +1228,13 @@ $('#scDel').onclick=()=>{const ed=scEditing;if(!ed)return;closeSc();mutate(()=>{
 $('#bNewScript').onclick=()=>openSc(null,'e');
 $('#vScripts').addEventListener('click',async e=>{
   const nw=e.target.closest('[data-scnew]');if(nw)return openSc(null,nw.dataset.scnew);
+  const al=e.target.closest('[data-scall]');if(al){const on=al.dataset.scall==='1';scripts.forEach(x=>{if(on)ui.scOpen[x.id]=true;else delete ui.scOpen[x.id]});saveUi();return renderScripts()}
   const tr=e.target.closest('tr[data-sc]');if(!tr)return;const sc=sById(tr.dataset.sc);if(!sc)return;
+  if(!e.target.closest('button:not(.tg)')){
+    if(tr.hasAttribute('data-sctog')){ui.scOpen[sc.id]?delete ui.scOpen[sc.id]:ui.scOpen[sc.id]=true;saveUi();return renderScripts()}
+    if(tr.dataset.sttog!==undefined){const k=sc.id+':'+tr.dataset.sttog;ui.stOpen[k]?delete ui.stOpen[k]:ui.stOpen[k]=true;saveUi();return renderScripts()}
+    return;
+  }
   if(e.target.closest('[data-scadd]'))return openAssign(sc);
   const cp=e.target.closest('[data-sccopy]');if(cp){const i=+cp.dataset.sccopy,t=i?(sc.followups||[])[i-1]:sc.text;if(!t)return toast('This message has no text saved.');toast(await writeClip(t)?`Copied “${sc.name}” · ${stepName(MBY[sc.method].code,i)}`:'Copy was blocked by the browser.');return}
   if(e.target.closest('[data-sced]'))openSc(sc);

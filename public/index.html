@@ -130,6 +130,17 @@ details.tbl summary{cursor:pointer;color:#5b6168}
 details.tbl table{margin-top:6px;font-size:12.5px}
 details.tbl th{position:static;cursor:default}
 details.tbl td{font-variant-numeric:tabular-nums}
+.sctbl tr.step td{padding-top:5px;padding-bottom:5px;font-size:12.5px;border-bottom-color:#f4f5f6}
+.sctbl tr.step td:first-child{padding-left:26px}
+.sctbl tr.step .snm2{font-weight:600;color:#33373d}
+.sctbl tr.step .prev{font-size:12px}
+.sctbl tr.pos td{background:#fafbfc;font-size:12.5px;padding-top:6px;padding-bottom:6px}
+.sctbl tr.posh td{background:#f3f4f6;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:#5b6168;font-weight:650;padding-top:7px;padding-bottom:5px}
+.fuitem{border:1px solid #e3e5e8;border-radius:8px;padding:8px 10px;margin-top:8px}
+.fuitem .h{display:flex;align-items:center;font-size:12.5px;color:#5b6168;font-weight:600;margin-bottom:5px}
+.fuitem .h button{margin-left:auto}
+#askStepRow{margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#askStepRow select{border:1px solid #d3d6da;border-radius:7px;padding:6px 8px;background:#fff}
 .asr{display:flex;gap:10px;align-items:center;padding:7px 10px;border-bottom:1px solid #f0f1f3;cursor:pointer;font-size:13px}
 .asr:hover{background:#fafbfc}
 .asr .nm{font-weight:600;width:220px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -340,6 +351,7 @@ body.dragging{user-select:none;cursor:row-resize}
   <h3 id="askT"></h3>
   <p>Which script or template did you use? This is what the Scripts page uses to work out which ones get replies.</p>
   <div class="opts" id="askL"></div>
+  <div id="askStepRow" style="display:none"><b style="font-weight:600">Which message?</b><select id="askStep"></select><span id="askStepHint" style="font-size:12.5px;color:#5b6168"></span></div>
   <div id="askNew" style="display:none">
     <label class="f">Script name</label><input type="text" id="askN" placeholder="e.g. Free mockup offer v1">
     <label class="f">Script text (optional — paste the message or call script)</label><textarea id="askX" rows="5"></textarea>
@@ -365,7 +377,9 @@ body.dragging{user-select:none;cursor:row-resize}
   <h3 id="scT">New script</h3>
   <label class="f">Name</label><input type="text" id="scN" placeholder="e.g. Free mockup offer v1">
   <label class="f">Outreach method</label><select class="f2" id="scM"></select>
-  <label class="f">Script / template text</label><textarea id="scX" rows="10" placeholder="Paste the email, message or call script here"></textarea>
+  <label class="f" id="scXL">First message</label><textarea id="scX" rows="7" placeholder="Paste the email, message or call script here"></textarea>
+  <div id="scFU"></div>
+  <button class="btn small" id="scAddFU" style="margin-top:8px">+ Add follow-up</button>
   <div class="foot"><button class="btn danger" id="scDel" style="margin-right:auto">Delete script</button><span id="scMsg" style="color:#b42318;font-size:13px"></span><button class="btn" id="scC">Cancel</button><button class="btn primary" id="scGo">Save</button></div>
 </div></div>
 
@@ -453,9 +467,21 @@ const byId=id=>leads.find(l=>l.id===id);
 function pushUndo(){undo.push(JSON.stringify({leads,scripts}));if(undo.length>40)undo.shift();$('#bUndo').disabled=false}
 function mutate(fn,msg){pushUndo();fn();render();scheduleSave();if(msg)toast(msg,true)}
 function doUndo(){if(!undo.length)return;const u=JSON.parse(undo.pop());leads=u.leads;scripts=u.scripts||[];$('#bUndo').disabled=!undo.length;render();scheduleSave();hideToast()}
-const parseH=h=>{const[date,code,sid]=h.split(':');return{date,code,sid:sid||''}};
+const parseH=h=>{const[date,code,sid,st]=h.split(':');return{date,code,sid:sid||'',step:st===undefined||st===''?null:+st}};
+const fmtH=e=>e.date+':'+e.code+(e.sid?':'+e.sid+(e.step!=null?':'+e.step:''):'');
+const FIRSTW={E:'First email',P:'First call',W:'First WhatsApp',M:'First message'};
+const ORD=n=>n+(n%100>=11&&n%100<=13?'th':['th','st','nd','rd'][n%10]||'th');
+const stepName=(code,n)=>n===0?FIRSTW[code]:'Follow-up '+n;
+// chronological entries; pos = nth contact of that method to this lead; step = script step (explicit, else nth use of that script)
+function annotate(l){
+  const es=l.hist.map((h,i)=>({...parseH(h),i})).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:a.i-b.i);
+  const cm={},cs={};
+  es.forEach(e=>{e.pos=cm[e.code]=(cm[e.code]??-1)+1;const t=e.sid&&sById(e.sid);if(t){const n=cs[e.sid]=(cs[e.sid]??-1)+1;if(e.step==null)e.step=n}else e.step=null});
+  return es;
+}
+const priorUses=(l,sid)=>l.hist.map(parseH).filter(e=>e.sid===sid).length;
 const sById=id=>scripts.find(x=>x.id===id);
-function logContact(l,k,sid){l[k]++;l.hist.push(today()+':'+MBY[k].code+(sid?':'+sid:''));l.next=addDays(today(),MBY[k].gap)}
+function logContact(l,k,sid,step){if(sid&&step==null)step=priorUses(l,sid);l[k]++;l.hist.push(fmtH({date:today(),code:MBY[k].code,sid:sid||'',step:sid?step:null}));l.next=addDays(today(),MBY[k].gap)}
 function setMockup(l,on){l.mockup=on;l.mockupOn=on?(l.mockupOn||today()):''}
 function setReplied(l,on){l.replied=on;l.repliedOn=on?(l.repliedOn||today()):''}
 function unlogContact(l,k){
@@ -832,7 +858,7 @@ $('#bAdd').onclick=()=>{
 let noteLead=null;
 function openNotes(l){
   noteLead=l;$('#noteT').textContent=`#${leads.indexOf(l)+1} ${l.business||'Lead'}`;$('#noteOwner').value=l.owner;$('#noteA').value=l.notes;
-  $('#noteH').innerHTML=l.hist.length?'<b>Contact history</b><br>'+l.hist.slice().reverse().map(h=>{const e=parseH(h),sc=sById(e.sid);return fmtD(e.date)+' — '+MBY[e.code].label+(sc?' · '+esc(sc.name):'')}).join('<br>'):'No contacts logged yet.';
+  $('#noteH').innerHTML=l.hist.length?'<b>Contact history</b><br>'+annotate(l).reverse().map(e=>{const sc=sById(e.sid);return fmtD(e.date)+' — '+MBY[e.code].label+(sc?' · '+esc(sc.name)+' · '+stepName(e.code,e.step):e.pos?' · '+ORD(e.pos+1)+' '+MBY[e.code].short:'')}).join('<br>'):'No contacts logged yet.';
   $('#noteO').classList.add('show');$('#noteA').focus();
 }
 function closeNotes(){
@@ -1000,7 +1026,7 @@ function dayStats(D){
     if(l.added===D)r.added++;
     if(l.mockup&&l.mockupOn===D)r.mockups++;
     if(l.replied&&l.repliedOn===D)r.replies++;
-    const es=l.hist.map(parseH),on=es.filter(e=>e.date===D);
+    const es=annotate(l),on=es.filter(e=>e.date===D);
     if(!on.length){if(l.replied&&l.repliedOn===D)r.rows.push({l,on,first:false,rep:true});continue}
     r.contacted++;const first=es.reduce((m,e)=>e.date<m?e.date:m,'9999')===D;
     first?r.newc++:r.fu++;on.forEach(e=>r[e.code]++);
@@ -1047,7 +1073,7 @@ function renderDay(){
   const seg=`<div class="seg">${[['day','Day'],['week','Week'],['month','Month'],['year','Year']].map(([k,l])=>`<button data-per="${k}" class="${per===k?'on':''}">${l}</button>`).join('')}</div>`;
   if(per==='day'){
     const D=A,isT=D===T0,s=dayStats(D);
-    const tag=(e)=>{const sc=sById(e.sid);return `<span class="mtag">${MBY[e.code].label}${sc?' · '+esc(sc.name):''}</span>`};
+    const tag=(e)=>{const sc=sById(e.sid);return `<span class="mtag">${MBY[e.code].label}${sc?' · '+esc(sc.name)+' · '+stepName(e.code,e.step):e.pos?' · '+ORD(e.pos+1)+' '+MBY[e.code].short:''}</span>`};
     $('#vStats').innerHTML=`<div class="vhead"><h2>${isT?"Today's stats":'Stats for '+pISO(D).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})}</h2><span class="sp"></span>${seg}
       <div class="dnav"><button class="btn small" data-dd="-1">◀</button><input type="date" id="dDay" value="${D}" max="${T0}"><button class="btn small" data-dd="1" ${isT?'disabled':''}>▶</button>${isT?'':'<button class="btn small" data-dd="0">Today</button>'}</div></div>
       ${grid(s)}
@@ -1124,48 +1150,70 @@ $('#vStats').addEventListener('change',e=>{if(e.target.id==='dDay'&&e.target.val
 
 /* ---------- scripts ---------- */
 function scriptStats(){
-  const st=new Map(),key=e=>e.sid&&sById(e.sid)?e.sid:'none:'+e.code;
-  const get=k=>{if(!st.has(k))st.set(k,{uses:0,leads:new Set(),replies:0});return st.get(k)};
+  const st=new Map(),pos={},key=e=>e.sid&&sById(e.sid)?e.sid:'none:'+e.code;
+  const nw=()=>({uses:0,leads:new Set(),replies:0});
+  const get=k=>{if(!st.has(k))st.set(k,{...nw(),steps:new Map()});return st.get(k)};
+  const gstep=(x,n)=>{if(!x.steps.has(n))x.steps.set(n,nw());return x.steps.get(n)};
+  const gpos=(c,n)=>{pos[c]=pos[c]||new Map();if(!pos[c].has(n))pos[c].set(n,nw());return pos[c].get(n)};
   for(const l of leads){
-    const es=l.hist.map(parseH);if(!es.length)continue;
-    es.forEach(e=>{const x=get(key(e));x.uses++;x.leads.add(l.id)});
+    const es=annotate(l);if(!es.length)continue;
+    es.forEach(e=>{const x=get(key(e));x.uses++;x.leads.add(l.id);if(e.step!=null){const y=gstep(x,e.step);y.uses++;y.leads.add(l.id)}const p=gpos(e.code,e.pos);p.uses++;p.leads.add(l.id)});
     if(l.replied){
       const cut=l.repliedOn||'9999',pool=es.filter(e=>e.date<=cut),use=pool.length?pool:es,tagged=use.filter(e=>e.sid&&sById(e.sid));
-      const e=(tagged.length?tagged:use)[(tagged.length?tagged:use).length-1];get(key(e)).replies++;
+      const e=(tagged.length?tagged:use)[(tagged.length?tagged:use).length-1],x=get(key(e));x.replies++;if(e.step!=null)gstep(x,e.step).replies++;
+      const last=use[use.length-1];gpos(last.code,last.pos).replies++;
     }
   }
-  return st;
+  return{st,pos};
 }
 function renderScripts(){
-  const st=scriptStats(),z={uses:0,leads:new Set(),replies:0};
-  const row=(name,prev,x,id,none)=>{const n=x.leads.size,rt=n?Math.round(x.replies/n*100):0;
-    return `<tr class="${none?'none':''}" ${id?`data-sc="${id}"`:''}><td>${none?`<i>${name}</i>`:`<div class="snm" data-sced>${esc(name)}</div>`}${prev?`<div class="prev">${esc(prev)}</div>`:''}</td>
-      <td class="n">${n}</td><td class="n">${x.replies}</td><td class="n"><div class="rate"><b>${n?rt+'%':'–'}</b><div class="bar"><i style="width:${rt}%"></i></div></div></td><td class="n">${x.uses}</td>
-      <td class="n">${id?`<button class="btn small" data-scadd title="Credit leads you contacted earlier to this script">Add past contacts</button> <button class="btn small" data-sccopy>Copy text</button> <button class="btn small" data-sced>Edit</button>`:''}</td></tr>`};
+  const{st,pos}=scriptStats(),z={uses:0,leads:new Set(),replies:0,steps:new Map()};
+  const nums=x=>{const n=x.leads.size,rt=n?Math.round(x.replies/n*100):0;return `<td class="n">${n}</td><td class="n">${x.replies}</td><td class="n"><div class="rate"><b>${n?rt+'%':'–'}</b><div class="bar"><i style="width:${rt}%"></i></div></div></td><td class="n">${x.uses}</td>`};
+  const row=(sc,x)=>{
+    const fu=sc.followups||[],code=MBY[sc.method].code,maxUsed=Math.max(-1,...x.steps.keys()),n=Math.max(fu.length,maxUsed);
+    let h=`<tr data-sc="${sc.id}"><td><div class="snm" data-sced>${esc(sc.name)}</div><div class="prev">${fu.length?plural(fu.length,'follow-up')+' · ':''}${esc(sc.text.replace(/\s+/g,' ').slice(0,120))}</div></td>${nums(x)}
+      <td class="n"><button class="btn small" data-scadd title="Credit leads you contacted earlier to this script">Add past contacts</button> <button class="btn small" data-sced>Edit</button></td></tr>`;
+    if(n>0||fu.length)for(let i=0;i<=n;i++){const t=i===0?sc.text:fu[i-1],y=x.steps.get(i)||{uses:0,leads:new Set(),replies:0};
+      h+=`<tr class="step" data-sc="${sc.id}" data-step="${i}"><td><span class="snm2">↳ ${stepName(code,i)}</span>${t?` <span class="prev" style="display:inline">${esc(t.replace(/\s+/g,' ').slice(0,90))}</span>`:i>fu.length?' <span class="prev" style="display:inline">(no text saved)</span>':''}</td>${nums(y)}<td class="n">${t?`<button class="btn small" data-sccopy="${i}">Copy</button>`:''}</td></tr>`}
+    else h=h.replace('<button class="btn small" data-sced>Edit</button>','<button class="btn small" data-sccopy="0">Copy text</button> <button class="btn small" data-sced>Edit</button>');
+    return h;
+  };
   const groups=METHODS.map(m=>{
     const list=scripts.filter(x=>x.method===m.k).map(x=>({x,s:st.get(x.id)||z})).sort((a,b)=>{const ra=a.s.leads.size?a.s.replies/a.s.leads.size:-1,rb=b.s.leads.size?b.s.replies/b.s.leads.size:-1;return rb-ra||b.s.leads.size-a.s.leads.size||a.x.name.localeCompare(b.x.name)});
-    const none=st.get('none:'+m.code);
-    const title={e:'Email',p:'Cold call',w:'WhatsApp',m:'Message'}[m.k];
-    return `<section class="card"><header style="cursor:default"><h2>${title} scripts</h2><span class="count ${list.length?'':'zero'}">${list.length}</span><span class="sp"></span><button class="btn small" data-scnew="${m.k}">+ New ${m.k==='w'?title:title.toLowerCase()} script</button></header>
+    const none=st.get('none:'+m.code),pm=pos[m.code];
+    const title={e:'Email',p:'Cold call',w:'WhatsApp',m:'Message'}[m.k],tl=m.k==='w'?title:title.toLowerCase();
+    const posRows=pm?[...pm.keys()].sort((a,b)=>a-b).map(i=>`<tr class="pos"><td>${i===0?FIRSTW[m.code]:`Follow-up ${i} <span style="color:#6b7280">(${ORD(i+1)} ${m.short})</span>`}</td>${nums(pm.get(i))}<td></td></tr>`).join(''):'';
+    return `<section class="card"><header style="cursor:default"><h2>${title} scripts</h2><span class="count ${list.length?'':'zero'}">${list.length}</span><span class="sp"></span><button class="btn small" data-scnew="${m.k}">+ New ${tl} script</button></header>
       ${list.length||none?`<div style="overflow:auto"><table class="sctbl"><thead><tr><th>Script</th><th>Leads contacted</th><th>Replies</th><th>Reply rate</th><th>Times used</th><th></th></tr></thead><tbody>
-      ${list.map(o=>row(o.x.name,o.x.text.replace(/\s+/g,' ').slice(0,140),o.s,o.x.id)).join('')}${none?row('No script logged','',none,'',true):''}</tbody></table></div>`:`<div class="empty">No ${m.k==='w'?title:title.toLowerCase()} scripts yet.</div>`}
+      ${list.map(o=>row(o.x,o.s)).join('')}${none?`<tr class="none"><td><i>No script logged</i></td>${nums(none)}<td></td></tr>`:''}
+      ${posRows?`<tr class="posh"><td colspan="6">Which ${m.short} leads replied to — all ${m.short}s, any script</td></tr>${posRows}`:''}</tbody></table></div>`:`<div class="empty">No ${tl} scripts yet.</div>`}
     </section>`}).join('');
-  $('#vScripts').innerHTML=`<div class="vhead"><h2>Scripts</h2><p>Every time you log a contact you pick the script you used. Use “Add past contacts” to credit leads you contacted before a script was set up. Reply rate = replies ÷ leads contacted with that script. A reply is credited to the last script used on that lead before it replied, so each reply only counts once.</p></div>${groups}`;
+  $('#vScripts').innerHTML=`<div class="vhead"><h2>Scripts</h2><p>Each script can have follow-ups. When you log a contact you pick the script and which message it was (it picks the next one in the sequence for you). Reply rate = replies ÷ leads that got that message. A reply is credited to the last message sent before the lead replied, so each reply only counts once. Use “Add past contacts” to credit leads you contacted before a script was set up.</p></div>${groups}`;
 }
 let scEditing=null;
 function openSc(sc,method){
   scEditing=sc||null;$('#scT').textContent=sc?'Edit script':'New script';
   $('#scM').innerHTML=METHODS.map(m=>`<option value="${m.k}">${SM[m.k]}</option>`).join('');
   $('#scN').value=sc?sc.name:'';$('#scM').value=sc?sc.method:(method||'e');$('#scX').value=sc?sc.text:'';$('#scMsg').textContent='';
+  scFU=sc?(sc.followups||[]).slice():[];renderFU2();
   $('#scDel').style.display=sc?'':'none';$('#scO').classList.add('show');$('#scN').focus();
 }
+let scFU=[];
+function renderFU2(){
+  const code=MBY[$('#scM').value].code;$('#scXL').textContent=FIRSTW[code];
+  $('#scFU').innerHTML=scFU.map((t,i)=>`<div class="fuitem"><div class="h">Follow-up ${i+1}${i===scFU.length-1?'<button class="btn small" data-furm>Remove</button>':''}</div><textarea data-fu="${i}" rows="4" style="width:100%;border:1px solid #d3d6da;border-radius:7px;padding:7px;resize:vertical">${esc(t)}</textarea></div>`).join('');
+}
+$('#scM').addEventListener('change',renderFU2);
+$('#scFU').addEventListener('input',e=>{if(e.target.dataset.fu!==undefined)scFU[+e.target.dataset.fu]=e.target.value});
+$('#scFU').addEventListener('click',e=>{if(e.target.closest('[data-furm]')){scFU.pop();renderFU2()}});
+$('#scAddFU').onclick=()=>{scFU.push('');renderFU2();const t=$('#scFU').querySelectorAll('textarea');t[t.length-1].focus()};
 function closeSc(){$('#scO').classList.remove('show');scEditing=null}
 $('#scC').onclick=closeSc;
 $('#scGo').onclick=()=>{
   const name=$('#scN').value.trim();if(!name){$('#scMsg').textContent='Give the script a name.';return}
-  const method=$('#scM').value,text=$('#scX').value,ed=scEditing;closeSc();
-  if(ed)mutate(()=>{const x=sById(ed.id);x.name=name;x.method=method;x.text=text},'Script saved');
-  else mutate(()=>scripts.push({id:newId(),name,method,text,created:today()}),'Script added');
+  const method=$('#scM').value,text=$('#scX').value,ed=scEditing,fu=scFU.slice();while(fu.length&&!fu[fu.length-1].trim())fu.pop();closeSc();
+  if(ed)mutate(()=>{const x=sById(ed.id);x.name=name;x.method=method;x.text=text;x.followups=fu},'Script saved');
+  else mutate(()=>scripts.push({id:newId(),name,method,text,created:today(),followups:fu}),'Script added');
 };
 $('#scDel').onclick=()=>{const ed=scEditing;if(!ed)return;closeSc();mutate(()=>{scripts=scripts.filter(x=>x.id!==ed.id)},`Deleted “${ed.name}” — its contacts now count as “No script”`)};
 $('#bNewScript').onclick=()=>openSc(null,'e');
@@ -1173,7 +1221,7 @@ $('#vScripts').addEventListener('click',async e=>{
   const nw=e.target.closest('[data-scnew]');if(nw)return openSc(null,nw.dataset.scnew);
   const tr=e.target.closest('tr[data-sc]');if(!tr)return;const sc=sById(tr.dataset.sc);if(!sc)return;
   if(e.target.closest('[data-scadd]'))return openAssign(sc);
-  if(e.target.closest('[data-sccopy]')){if(!sc.text)return toast('This script has no text saved.');toast(await writeClip(sc.text)?`Copied “${sc.name}”`:'Copy was blocked by the browser.');return}
+  const cp=e.target.closest('[data-sccopy]');if(cp){const i=+cp.dataset.sccopy,t=i?(sc.followups||[])[i-1]:sc.text;if(!t)return toast('This message has no text saved.');toast(await writeClip(t)?`Copied “${sc.name}” · ${stepName(MBY[sc.method].code,i)}`:'Copy was blocked by the browser.');return}
   if(e.target.closest('[data-sced]'))openSc(sc);
 });
 
@@ -1231,7 +1279,7 @@ $('#asGo').onclick=()=>{
   const add=plan.filter(p=>p.on&&!p.init).length,rem=plan.filter(p=>!p.on&&p.init).length;
   closeAssign();
   mutate(()=>{for(const p of plan){const l=byId(p.id);if(!l)continue;
-    const fix=fn=>{l.hist=l.hist.map(h=>{const e=parseH(h);if(e.code!==code)return h;const sid=fn(e);return e.date+':'+e.code+(sid?':'+sid:'')})};
+    const fix=fn=>{l.hist=l.hist.map(h=>{const e=parseH(h);if(e.code!==code)return h;const sid=fn(e);return sid===e.sid?h:fmtH({date:e.date,code:e.code,sid,step:null})})};
     if(p.on){
       if(p.unt)fix(e=>untagged(e)?sc.id:e.sid);
       else if(!p.init)fix(()=>sc.id);
@@ -1253,7 +1301,16 @@ function askScript(k,list,msg){
   $('#askN').value='';$('#askX').value='';$('#askMsg').textContent='';
   selAsk(pre);$('#askO').classList.add('show');$('#askGo').focus();
 }
-function selAsk(v){ask.sel=v;document.querySelectorAll('#askL .opt').forEach(o=>{const on=o.dataset.v===v;o.classList.toggle('on',on);o.querySelector('input').checked=on});
+function fillAskStep(){
+  const sc=sById(ask.sel),row=$('#askStepRow');if(!sc){row.style.display='none';return}
+  const code=MBY[ask.k].code,fu=sc.followups||[],nexts=ask.list.map(l=>priorUses(l,sc.id)),mx=Math.max(fu.length,...nexts);
+  const auto=ask.list.length===1?`Next in sequence (${stepName(code,nexts[0])})`:'Next in sequence for each lead';
+  $('#askStep').innerHTML=`<option value="auto">${auto}</option>`+[...Array(mx+1)].map((_,i)=>`<option value="${i}">${stepName(code,i)}${i>0&&i>fu.length?' (no text saved)':''}</option>`).join('');
+  const cnt={};nexts.forEach(n=>cnt[n]=(cnt[n]||0)+1);
+  $('#askStepHint').textContent=ask.list.length>1?Object.keys(cnt).sort((a,b)=>a-b).map(n=>`${cnt[n]} × ${stepName(code,+n)}`).join(', '):'';
+  row.style.display='';
+}
+function selAsk(v){ask.sel=v;document.querySelectorAll('#askL .opt').forEach(o=>{const on=o.dataset.v===v;o.classList.toggle('on',on);o.querySelector('input').checked=on});fillAskStep();
   $('#askNew').style.display=v==='__new'?'':'none';if(v==='__new')$('#askN').focus();$('#askGo').textContent=v==='__new'?'Save script & log contact':'Log contact'}
 function closeAsk(){$('#askO').classList.remove('show');ask=null}
 $('#askL').addEventListener('click',e=>{const o=e.target.closest('.opt');if(o){e.preventDefault();selAsk(o.dataset.v)}});
@@ -1264,10 +1321,12 @@ $('#askO').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.target.closest(
 $('#askGo').onclick=()=>{
   if(!ask)return;const{k,list,msg}=ask;let sid=ask.sel,ns=null;
   if(sid==='__new'){const name=$('#askN').value.trim();if(!name){$('#askMsg').textContent='Give the new script a name.';$('#askN').focus();return}
-    ns={id:newId(),name,method:k,text:$('#askX').value,created:today()};sid=ns.id}
+    ns={id:newId(),name,method:k,text:$('#askX').value,created:today(),followups:[]};sid=ns.id}
+  const sv=$('#askStepRow').style.display===''?$('#askStep').value:'auto',step=ns||sv==='auto'?null:+sv;
   ui.lastScript[k]=sid;saveUi();closeAsk();
-  const ids=list.map(l=>l.id);
-  mutate(()=>{if(ns)scripts.push(ns);ids.forEach(id=>{const l=byId(id);if(l)logContact(l,k,sid)})},msg+(ns?` · ${ns.name}`:sid&&sById(sid)?` · ${sById(sid).name}`:''));
+  const ids=list.map(l=>l.id),sc=ns||sById(sid);
+  const stepTxt=sc&&ids.length===1?' · '+stepName(MBY[k].code,step??(ns?0:priorUses(byId(ids[0]),sid))):'';
+  mutate(()=>{if(ns)scripts.push(ns);ids.forEach(id=>{const l=byId(id);if(l)logContact(l,k,sid,step)})},msg+(sc?` · ${sc.name}`:'')+stepTxt);
 };
 
 /* ---------- toast ---------- */
@@ -1285,8 +1344,9 @@ function buildWb(){
   const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=WIDTHS.map(w=>({wch:w}));
   if(leads.length)ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:leads.length,c:HEAD.length-1}})};
   const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Leads');
-  const ss=XLSX.utils.aoa_to_sheet([['ID','Name','Method','Script','Created']].concat(scripts.map(x=>[x.id,x.name,SM[x.method],x.text,x.created||''])));
-  ss['!cols']=[{wch:14},{wch:30},{wch:12},{wch:80},{wch:12}];XLSX.utils.book_append_sheet(wb,ss,'Scripts');
+  const nf=Math.max(0,...scripts.map(x=>(x.followups||[]).length));
+  const ss=XLSX.utils.aoa_to_sheet([['ID','Name','Method','Script','Created',...[...Array(nf)].map((_,i)=>'Follow-up '+(i+1))]].concat(scripts.map(x=>[x.id,x.name,SM[x.method],x.text,x.created||'',...[...Array(nf)].map((_,i)=>(x.followups||[])[i]??'')])));
+  ss['!cols']=[{wch:14},{wch:30},{wch:12},{wch:60},{wch:12},...[...Array(nf)].map(()=>({wch:60}))];XLSX.utils.book_append_sheet(wb,ss,'Scripts');
   return wb;
 }
 function dateStr(v){
@@ -1311,7 +1371,7 @@ function parseWb(wb){
     l.website=yn(r,'Website');l.replied=yn(r,'Replied');
     l.e=num(r,'Emailed');l.p=num(r,'Phoned');l.w=num(r,'WhatsApped');l.m=num(r,'Messaged');
     l.interest=Math.min(5,num(r,'Interest (1-5)'));l.notes=s(r,'Notes');l.next=dateStr(g(r,'Next Follow-up'));
-    l.hist=s(r,'History').split(';').map(x=>x.trim()).filter(x=>/^\d{4}-\d\d-\d\d:[EPWM](:[a-z0-9]+)?$/i.test(x));
+    l.hist=s(r,'History').split(';').map(x=>x.trim()).filter(x=>/^\d{4}-\d\d-\d\d:[EPWM](:[a-z0-9]+(:\d+)?)?$/i.test(x));
     l.added=dateStr(g(r,'Added'));l.mockup=yn(r,'Mockup Sent');l.mockupOn=l.mockup?dateStr(g(r,'Mockup Sent On')):'';l.repliedOn=l.replied?dateStr(g(r,'Replied On')):'';
     if(!l.hist.length){const d=dateStr(g(r,'Last Contacted')),m=METHODS.find(m=>m.label.toLowerCase()===s(r,'Last Method').toLowerCase());if(d&&m)l.hist=[d+':'+m.code]}
     const id=s(r,'ID');if(id&&!ids.has(id))l.id=id;ids.add(l.id);
@@ -1321,7 +1381,8 @@ function parseWb(wb){
   if(ss){const sa=XLSX.utils.sheet_to_json(ss,{header:1,defval:'',raw:false});const sh={};(sa[0]||[]).forEach((c,i)=>sh[String(c).trim().toLowerCase()]=i);
     for(const r of sa.slice(1)){const id=String(r[sh.id]??'').trim(),name=String(r[sh.name]??'').trim();if(!id||!name)continue;
       const mt=String(r[sh.method]??'').trim().toLowerCase(),method=Object.keys(SM).find(k=>SM[k].toLowerCase()===mt||mt.startsWith(SM[k].toLowerCase().split(' ')[0]))||'e';
-      sc.push({id,name,method,text:String(r[sh.script]??''),created:dateStr(r[sh.created])})}}
+      const fu=[];for(let i=1;sh['follow-up '+i]!==undefined;i++)fu.push(String(r[sh['follow-up '+i]]??''));while(fu.length&&!fu[fu.length-1].trim())fu.pop();
+      sc.push({id,name,method,text:String(r[sh.script]??''),created:dateStr(r[sh.created]),followups:fu})}}
   return{tracker:true,leads:out,scripts:sc};
 }
 

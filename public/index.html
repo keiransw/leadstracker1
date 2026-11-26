@@ -76,6 +76,73 @@ th.dragging{opacity:.4}
 th.drop-l{box-shadow:inset 3px 0 0 #2563eb}
 th.drop-r{box-shadow:inset -3px 0 0 #2563eb}
 .pop .hint{font-size:12px;color:#5b6168;padding:2px 6px 6px}
+.tabs{display:flex;gap:2px;background:#eef0f2;border-radius:9px;padding:3px;margin-right:6px}
+.tabs a{padding:5px 12px;border-radius:7px;color:#4a5057;text-decoration:none;font-weight:550;white-space:nowrap}
+.tabs a:hover{color:#1c1f23}
+.tabs a.on{background:#fff;color:#1c1f23;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.vhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.vhead h2{margin:0;font-size:19px;font-weight:650}
+.vhead p{margin:0;color:#5b6168;font-size:13px;flex-basis:100%}
+.dnav{display:flex;gap:6px;align-items:center}
+.dnav input{border:1px solid #d3d6da;border-radius:7px;padding:5px 8px;background:#fff}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-bottom:18px}
+.sgrid h3{grid-column:1/-1;margin:6px 0 -2px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:#5b6168;font-weight:650}
+.scard{background:#fff;border:1px solid #e3e5e8;border-radius:10px;padding:14px 16px}
+.scard b{display:block;font-size:28px;font-weight:650;line-height:1.1;font-variant-numeric:tabular-nums}
+.scard span{font-size:13px;color:#5b6168}
+.scard.zero b{color:#b4b9bf}
+.daylist .r{display:flex;gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid #f0f1f3;flex-wrap:wrap}
+.daylist .r:last-child{border-bottom:0}
+.daylist .r .nm{font-weight:600;min-width:200px}
+.mtag{font-size:12px;border-radius:99px;padding:1px 9px;background:#eef2f7;color:#334155;white-space:nowrap}
+.mtag.new{background:#dbeafe;color:#1e40af}
+.mtag.fu{background:#fef3c7;color:#92400e}
+.mtag.rep{background:#dcfce7;color:#166534}
+.sctbl{width:100%;border-collapse:collapse;table-layout:fixed;min-width:820px}
+.sctbl th:nth-child(1){width:34%}.sctbl th:nth-child(6){width:300px}
+.sctbl th{position:static;cursor:default;background:#fafbfc}
+.sctbl td{white-space:normal;vertical-align:top;padding:9px 10px}
+.sctbl td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.sctbl .snm{font-weight:600;cursor:pointer}
+.sctbl .snm:hover{text-decoration:underline}
+.sctbl .prev{color:#5b6168;font-size:12.5px;max-width:520px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:0}
+.sctbl tr.none td{color:#6b7280}
+.rate{display:flex;align-items:center;gap:8px;min-width:130px}
+.rate i{display:block;height:6px;border-radius:3px;background:#2e9d5b;min-width:2px}
+.rate .bar{flex:1;background:#eceef1;border-radius:3px;height:6px;max-width:90px}
+.seg{display:inline-flex;gap:2px;background:#eef0f2;border-radius:8px;padding:3px}
+.seg button{border:0;background:none;border-radius:6px;padding:4px 12px;color:#4a5057;font-weight:550}
+.seg button.on{background:#fff;color:#1c1f23;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.plabel{font-weight:600;min-width:150px;text-align:center}
+.chartcard{padding:14px 16px 10px}
+.mchips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chartbox{position:relative}
+.chartbox svg{display:block;width:100%;height:auto;overflow:visible}
+.chartbox .hit{fill:transparent;cursor:pointer}
+.chartbox .hit:hover,.chartbox .hit.hv{fill:rgba(25,25,25,.04)}
+.ctip{position:absolute;pointer-events:none;background:#fff;border:1px solid #e3e5e8;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.12);padding:7px 10px;font-size:12.5px;color:#191919;display:none;white-space:nowrap;z-index:5}
+.ctip b{display:block;margin-bottom:2px}
+.ctip .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:#666;margin:2px 0 6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+details.tbl{margin-top:8px;font-size:12.5px}
+details.tbl summary{cursor:pointer;color:#5b6168}
+details.tbl table{margin-top:6px;font-size:12.5px}
+details.tbl th{position:static;cursor:default}
+details.tbl td{font-variant-numeric:tabular-nums}
+.asr{display:flex;gap:10px;align-items:center;padding:7px 10px;border-bottom:1px solid #f0f1f3;cursor:pointer;font-size:13px}
+.asr:hover{background:#fafbfc}
+.asr .nm{font-weight:600;width:220px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.asr .mt{color:#5b6168;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.asbox{border:1px solid #e3e5e8;border-radius:9px;max-height:52vh;overflow:auto;margin-top:8px}
+.opts{display:flex;flex-direction:column;gap:6px;max-height:46vh;overflow:auto;margin:6px 0}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid #e3e5e8;border-radius:9px;padding:9px 12px;cursor:pointer}
+.opt:hover{background:#fafbfc}
+.opt.on{border-color:#1c1f23;box-shadow:inset 0 0 0 1px #1c1f23}
+.opt input{margin-top:3px}
+.opt b{font-weight:600}
+.opt small{display:block;color:#5b6168;margin-top:1px}
+.modal select.f2{border:1px solid #d3d6da;border-radius:7px;padding:6px 8px;background:#fff;width:100%}
 #copyPop{min-width:250px}
 #copyPop .cols{max-height:46vh;overflow:auto;border-top:1px solid #eceef0;border-bottom:1px solid #eceef0;margin:4px 0;padding:4px 0}
 #copyPop .opt{font-size:12.5px}
@@ -103,6 +170,7 @@ button.pill:hover{filter:brightness(.95)}
 .c-no{background:#eceef1;color:#6b7280}
 .rep-yes{background:#dcfce7;color:#166534}
 .rep-no{background:#fee2e2;color:#991b1b}
+.mk-yes{background:#ede9fe;color:#5b21b6}
 .web-no{background:#dcfce7;color:#166534}
 .web-yes{background:#fde2e2;color:#a03a3a}
 .pm{margin-left:5px;display:inline-flex;gap:2px}
@@ -172,11 +240,15 @@ body.dragging{user-select:none;cursor:row-resize}
 
 <div class="top">
   <h1>Lead Tracker</h1>
+  <nav class="tabs"><a href="#leads" data-view="leads">Leads</a><a href="#stats" data-view="stats">Stats</a><a href="#scripts" data-view="scripts">Scripts</a></nav>
+  <span id="leadTools" style="display:contents">
   <button class="btn primary" id="bPaste">Paste leads</button>
   <button class="btn" id="bAdd">+ Add lead</button>
   <button class="btn" id="bCols">Columns ▾</button>
   <button class="btn" id="bCopy">Copy ▾</button>
   <button class="btn" id="bDup">Duplicates</button>
+  </span>
+  <span id="scriptTools" style="display:none"><button class="btn primary" id="bNewScript">+ New script</button></span>
   <button class="btn" id="bUndo" disabled>Undo</button>
   <span class="sp"></span>
   <span class="status" id="status"></span>
@@ -185,6 +257,9 @@ body.dragging{user-select:none;cursor:row-resize}
 
 <main>
   <div class="note" id="browserNote" style="display:none"></div>
+  <div id="vStats" style="display:none"></div>
+  <div id="vScripts" style="display:none"></div>
+  <div id="vLeads">
   <div class="stats" id="stats"></div>
 
   <section class="card" id="fuCard">
@@ -198,6 +273,7 @@ body.dragging{user-select:none;cursor:row-resize}
       <select id="fWeb"><option value="">Website: any</option><option value="no">Website: No</option><option value="yes">Website: Yes</option></select>
       <select id="fCon"><option value="">Contacted: any</option><option value="yes">Contacted: Yes</option><option value="no">Contacted: No</option></select>
       <select id="fRep"><option value="">Replied: any</option><option value="yes">Replied: Yes</option><option value="no">Replied: No</option></select>
+      <select id="fMk"><option value="">Mockup: any</option><option value="yes">Mockup sent: Yes</option><option value="no">Mockup sent: No</option></select>
       <button class="btn small" id="bClear">Clear filters</button>
       <span class="sp"></span>
       <span id="shown" style="color:#5b6168;font-size:12.5px"></span>
@@ -205,6 +281,7 @@ body.dragging{user-select:none;cursor:row-resize}
     <div class="chips" id="chips"></div>
     <div class="tw"><table id="tbl"><thead></thead><tbody></tbody></table></div>
   </section>
+  </div>
 </main>
 
 <div class="pop" id="colPop"></div>
@@ -221,6 +298,7 @@ body.dragging{user-select:none;cursor:row-resize}
   <select id="bSet">
     <option value="">More…</option>
     <option value="rep1">Replied: Yes</option><option value="rep0">Replied: No</option>
+    <option value="mk1">Mockup sent: Yes</option><option value="mk0">Mockup sent: No</option>
     <option value="web1">Website: Yes</option><option value="web0">Website: No</option>
     <option value="int1">Interest: 1</option><option value="int2">Interest: 2</option><option value="int3">Interest: 3</option><option value="int4">Interest: 4</option><option value="int5">Interest: 5</option>
     <option value="stop">Stop follow-ups</option>
@@ -256,6 +334,39 @@ body.dragging{user-select:none;cursor:row-resize}
   <p>Leads count as duplicates when they share an email, a phone number or the exact business name. Each group is merged into one lead: contact counts and history are added together, notes are combined, and blank fields are filled in from the copies. Untick a group to leave it alone.</p>
   <div class="dupList" id="dupL"></div>
   <div class="foot"><span id="dupMsg" style="color:#5b6168;margin-right:auto"></span><button class="btn" id="dupX">Close</button><button class="btn primary" id="dupGo">Merge</button></div>
+</div></div>
+
+<div class="overlay" id="askO"><div class="modal narrow">
+  <h3 id="askT"></h3>
+  <p>Which script or template did you use? This is what the Scripts page uses to work out which ones get replies.</p>
+  <div class="opts" id="askL"></div>
+  <div id="askNew" style="display:none">
+    <label class="f">Script name</label><input type="text" id="askN" placeholder="e.g. Free mockup offer v1">
+    <label class="f">Script text (optional — paste the message or call script)</label><textarea id="askX" rows="5"></textarea>
+  </div>
+  <div class="foot"><span id="askMsg" style="color:#b42318;margin-right:auto;font-size:13px"></span><button class="btn" id="askC">Cancel</button><button class="btn primary" id="askGo">Log contact</button></div>
+</div></div>
+
+<div class="overlay" id="asO"><div class="modal">
+  <h3 id="asT"></h3>
+  <p id="asP"></p>
+  <div class="row" style="margin:6px 0 0">
+    <input type="search" id="asQ" placeholder="Search leads…" style="border:1px solid #d3d6da;border-radius:7px;padding:6px 10px;width:200px">
+    <select id="asF" class="f2" style="width:auto"></select>
+    <select id="asI" class="f2" style="width:auto"></select>
+    <span class="sp"></span>
+    <button class="btn small" id="asAll">Tick all shown</button><button class="btn small" id="asNone">Untick all shown</button>
+  </div>
+  <div class="asbox" id="asL"></div>
+  <div class="foot"><span id="asMsg" style="color:#5b6168;margin-right:auto;font-size:13px"></span><button class="btn" id="asC">Cancel</button><button class="btn primary" id="asGo">Save</button></div>
+</div></div>
+
+<div class="overlay" id="scO"><div class="modal narrow">
+  <h3 id="scT">New script</h3>
+  <label class="f">Name</label><input type="text" id="scN" placeholder="e.g. Free mockup offer v1">
+  <label class="f">Outreach method</label><select class="f2" id="scM"></select>
+  <label class="f">Script / template text</label><textarea id="scX" rows="10" placeholder="Paste the email, message or call script here"></textarea>
+  <div class="foot"><button class="btn danger" id="scDel" style="margin-right:auto">Delete script</button><span id="scMsg" style="color:#b42318;font-size:13px"></span><button class="btn" id="scC">Cancel</button><button class="btn primary" id="scGo">Save</button></div>
 </div></div>
 
 <div class="overlay" id="noteO"><div class="modal narrow">
@@ -316,33 +427,40 @@ const METHODS=[
 const MBY={};METHODS.forEach(m=>{MBY[m.k]=m;MBY[m.code]=m});
 const COLS=[
  {k:'business',label:'Business name'},{k:'owner',label:'Owner name(s)'},{k:'email',label:'Email'},{k:'phone',label:'Phone'},
- {k:'industry',label:'Industry'},{k:'website',label:'Website'},{k:'contacted',label:'Contacted'},{k:'replied',label:'Replied'},
+ {k:'industry',label:'Industry'},{k:'website',label:'Website'},{k:'contacted',label:'Contacted'},{k:'replied',label:'Replied'},{k:'mockup',label:'Mockup sent'},
  {k:'total',label:'Total contacts'},{k:'e',label:'Emailed'},{k:'p',label:'Phoned'},{k:'w',label:'WhatsApped'},{k:'m',label:'Messaged'},
  {k:'interest',label:'Interest'},{k:'last',label:'Last contacted'},{k:'next',label:'Next follow-up'},{k:'notes',label:'Notes'}];
 const TEXT=['business','owner','email','phone','industry'];
 
 /* ---------- state ---------- */
 let leads=[];
+let scripts=[];
 let undo=[];
 let selected=new Set();
-let ui={order:[],hidden:[],inds:[],q:'',web:'',con:'',rep:'',sort:null,dir:1,fuOpen:true};
+let ui={order:[],hidden:[],inds:[],q:'',web:'',con:'',rep:'',mk:'',sort:null,dir:1,fuOpen:true};
 try{Object.assign(ui,JSON.parse(localStorage.getItem('lt_ui')||'{}'))}catch(e){}
+if(ui.mk===undefined)ui.mk='';
+if(ui.order&&ui.order.length&&!ui.order.includes('mockup')){const i=ui.order.indexOf('replied');ui.order.splice(i<0?ui.order.length:i+1,0,'mockup')}
 const saveUi=()=>{try{localStorage.setItem('lt_ui',JSON.stringify(ui))}catch(e){}};
 let justAdded=null, lastCb=null, visibleIds=[];
 
 const total=l=>l.e+l.p+l.w+l.m;
 const lastOf=l=>{if(!l.hist.length)return null;const[d,c]=l.hist[l.hist.length-1].split(':');return{date:d,m:MBY[c]}};
-const blank=()=>({id:newId(),business:'',owner:'',email:'',phone:'',industry:'',website:false,replied:false,e:0,p:0,w:0,m:0,interest:0,notes:'',next:'',hist:[]});
+const blank=()=>({id:newId(),business:'',owner:'',email:'',phone:'',industry:'',website:false,replied:false,repliedOn:'',mockup:false,mockupOn:'',added:'',e:0,p:0,w:0,m:0,interest:0,notes:'',next:'',hist:[]});
 const byId=id=>leads.find(l=>l.id===id);
 
 /* ---------- mutations ---------- */
-function pushUndo(){undo.push(JSON.stringify(leads));if(undo.length>40)undo.shift();$('#bUndo').disabled=false}
+function pushUndo(){undo.push(JSON.stringify({leads,scripts}));if(undo.length>40)undo.shift();$('#bUndo').disabled=false}
 function mutate(fn,msg){pushUndo();fn();render();scheduleSave();if(msg)toast(msg,true)}
-function doUndo(){if(!undo.length)return;leads=JSON.parse(undo.pop());$('#bUndo').disabled=!undo.length;render();scheduleSave();hideToast()}
-function logContact(l,k){l[k]++;l.hist.push(today()+':'+MBY[k].code);l.next=addDays(today(),MBY[k].gap)}
+function doUndo(){if(!undo.length)return;const u=JSON.parse(undo.pop());leads=u.leads;scripts=u.scripts||[];$('#bUndo').disabled=!undo.length;render();scheduleSave();hideToast()}
+const parseH=h=>{const[date,code,sid]=h.split(':');return{date,code,sid:sid||''}};
+const sById=id=>scripts.find(x=>x.id===id);
+function logContact(l,k,sid){l[k]++;l.hist.push(today()+':'+MBY[k].code+(sid?':'+sid:''));l.next=addDays(today(),MBY[k].gap)}
+function setMockup(l,on){l.mockup=on;l.mockupOn=on?(l.mockupOn||today()):''}
+function setReplied(l,on){l.replied=on;l.repliedOn=on?(l.repliedOn||today()):''}
 function unlogContact(l,k){
   if(l[k]<=0)return;l[k]--;
-  for(let i=l.hist.length-1;i>=0;i--)if(l.hist[i].endsWith(':'+MBY[k].code)){l.hist.splice(i,1);break}
+  for(let i=l.hist.length-1;i>=0;i--)if(parseH(l.hist[i]).code===MBY[k].code){l.hist.splice(i,1);break}
   const la=lastOf(l);l.next=la?addDays(la.date,la.m.gap):'';
 }
 
@@ -351,7 +469,8 @@ function sortVal(l,k){
   if(k==='num')return leads.indexOf(l);
   if(k==='total'||k==='contacted')return total(l);
   if(k==='last'){const a=lastOf(l);return a?a.date:''}
-  if(k==='website'||k==='replied')return l[k]?1:0;
+  if(k==='website'||k==='replied'||k==='mockup')return l[k]?1:0;
+  if(k==='email'){const v=normEmail(l.email);return (v?'0':'1')+(v||String(l.email||'').toLowerCase())}
   const v=l[k];return typeof v==='string'?v.toLowerCase():v;
 }
 function visible(){
@@ -362,6 +481,7 @@ function visible(){
     if(ui.web&&(l.website?'yes':'no')!==ui.web)return false;
     if(ui.con&&(total(l)?'yes':'no')!==ui.con)return false;
     if(ui.rep&&(l.replied?'yes':'no')!==ui.rep)return false;
+    if(ui.mk&&(l.mockup?'yes':'no')!==ui.mk)return false;
     if(q&&!(l.business+' '+l.owner+' '+l.email+' '+l.phone+' '+l.industry+' '+l.notes).toLowerCase().includes(q))return false;
     return true;
   });
@@ -372,7 +492,7 @@ function visible(){
 /* ---------- rendering ---------- */
 function render(){
   const ids=new Set(leads.map(l=>l.id));selected.forEach(id=>{if(!ids.has(id))selected.delete(id)});
-  renderStats();renderFU();renderChips();renderTable();syncSel();
+  renderStats();renderFU();renderChips();renderTable();syncSel();renderView();
 }
 function renderStats(){
   const t=today(),c=leads.filter(l=>total(l)).length,r=leads.filter(l=>l.replied).length,d=leads.filter(l=>l.next&&l.next<=t).length;
@@ -417,6 +537,7 @@ function cell(l,k){
       return `<td class="ed ${k==='business'?'strong':''}" data-f="${k}" title="${esc(l[k])}">${esc(l[k])}</td>`;
     case 'website':return `<td><button class="pill ${l.website?'web-yes':'web-no'}" data-tog="website">${l.website?'Yes':'No'}</button></td>`;
     case 'contacted':return `<td><span class="pill ${t?'c-yes':'c-no'}">${t?'Yes':'No'}</span></td>`;
+    case 'mockup':return `<td><button class="pill ${l.mockup?'mk-yes':'c-no'}" data-tog="mockup" title="${l.mockup&&l.mockupOn?'Sent '+fmtD(l.mockupOn):'Click to mark as sent'}">${l.mockup?'Yes':'No'}</button></td>`;
     case 'replied':return `<td><button class="pill ${l.replied?'rep-yes':'rep-no'}" data-tog="replied">${l.replied?'Yes':'No'}</button></td>`;
     case 'total':{const br=METHODS.filter(m=>l[m.k]).map(m=>l[m.k]+' '+m.short).join(' · ');return `<td class="tot"><b>${t}</b>${br?`<small>${br}</small>`:''}</td>`}
     case 'e':case 'p':case 'w':case 'm':{const n=l[k];
@@ -435,18 +556,18 @@ function orderedCols(){
 function renderTable(){
   const cols=orderedCols().filter(c=>!ui.hidden.includes(c.k));
   const ar=k=>ui.sort===k?`<span class="ar">${ui.dir>0?'▲':'▼'}</span>`:'';
-  $('#tbl thead').innerHTML='<tr><th data-sort="num"><label style="display:flex;gap:7px;align-items:center"><input type="checkbox" id="cbAll"> #'+ar('num')+'</label></th>'+cols.map(c=>`<th data-sort="${c.k}" draggable="true" title="Drag to move · click to sort">${c.label}${ar(c.k)}</th>`).join('')+'<th></th></tr>';
+  $('#tbl thead').innerHTML='<tr><th data-sort="num"><label style="display:flex;gap:7px;align-items:center"><input type="checkbox" id="cbAll"> #'+ar('num')+'</label></th>'+cols.map(c=>`<th data-sort="${c.k}" draggable="true" title="${c.k==='email'?'Drag to move · click to sort: leads with an email first, then without (click again to flip)':'Drag to move · click to sort'}">${c.label}${ar(c.k)}</th>`).join('')+'<th></th></tr>';
   const vis=visible();visibleIds=vis.map(l=>l.id);
   const pos=new Map(leads.map((l,i)=>[l.id,i+1]));
   $('#tbl tbody').innerHTML=vis.length?vis.map(l=>`<tr data-id="${l.id}"><td class="num"><label><input type="checkbox" class="cb">${pos.get(l.id)}</label></td>${cols.map(c=>cell(l,c.k)).join('')}<td><button class="del" data-del title="Remove lead">×</button></td></tr>`).join('')
     :`<tr><td colspan="${cols.length+2}" class="empty">${leads.length?'No leads match these filters.':'No leads yet. Click “Paste leads” to bring in a batch from your scraper, or “+ Add lead”.'}</td></tr>`;
   $('#shown').textContent=vis.length===leads.length?`${leads.length} leads`:`Showing ${vis.length} of ${leads.length}`;
-  $('#q').value=ui.q;$('#fWeb').value=ui.web;$('#fCon').value=ui.con;$('#fRep').value=ui.rep;
+  $('#q').value=ui.q;$('#fWeb').value=ui.web;$('#fCon').value=ui.con;$('#fRep').value=ui.rep;$('#fMk').value=ui.mk;
 }
 function syncSel(){
   document.querySelectorAll('[data-id]').forEach(r=>{const on=selected.has(r.dataset.id);r.classList.toggle('sel',on);const cb=r.querySelector('.cb');if(cb)cb.checked=on});
   const all=$('#cbAll');if(all)all.checked=visibleIds.length>0&&visibleIds.every(id=>selected.has(id));
-  $('#bulk').classList.toggle('show',selected.size>0);
+  $('#bulk').classList.toggle('show',selected.size>0&&view==='leads');
   $('#bulkN').textContent=selected.size+' selected';
 }
 let laterT=null;
@@ -494,8 +615,10 @@ document.addEventListener('click',e=>{
     lastCb=l.id;syncSel();return;
   }
   const b=t.closest('button,td');if(!b)return;
-  if(b.dataset.inc)return mutate(()=>logContact(l,b.dataset.inc),`${MBY[b.dataset.inc].label} ${l.business||'lead'} · next follow-up ${fmtD(addDays(today(),MBY[b.dataset.inc].gap))}`);
+  if(b.dataset.inc){const k=b.dataset.inc;return askScript(k,[l],`${MBY[k].label} ${l.business||'lead'} · next follow-up ${fmtD(addDays(today(),MBY[k].gap))}`)}
   if(b.dataset.dec)return mutate(()=>unlogContact(l,b.dataset.dec));
+  if(b.dataset.tog==='replied')return mutate(()=>setReplied(l,!l.replied));
+  if(b.dataset.tog==='mockup')return mutate(()=>setMockup(l,!l.mockup),l.mockup?null:`Mockup sent to ${l.business||'lead'}`);
   if(b.dataset.tog)return mutate(()=>{l[b.dataset.tog]=!l[b.dataset.tog]});
   if('stop' in b.dataset)return mutate(()=>{l.next=''},`Stopped follow-ups for ${l.business||'lead'}`);
   if('del' in b.dataset)return mutate(()=>{leads=leads.filter(x=>x!==l)},`Removed ${l.business||'lead'}`);
@@ -562,8 +685,8 @@ thead.addEventListener('dragend',()=>{if(colDrag){colDrag=null;clearDrop();rende
 /* ---------- filters ---------- */
 $('#q').addEventListener('input',e=>{ui.q=e.target.value;justAdded=null;renderTableKeepFocus()});
 function renderTableKeepFocus(){const s=$('#q').selectionStart;renderTable();syncSel();$('#q').focus();$('#q').setSelectionRange(s,s)}
-[['#fWeb','web'],['#fCon','con'],['#fRep','rep']].forEach(([s,k])=>$(s).addEventListener('change',e=>{ui[k]=e.target.value;justAdded=null;saveUi();renderTable();syncSel()}));
-$('#bClear').onclick=()=>{ui.q='';ui.web=ui.con=ui.rep='';ui.inds=[];justAdded=null;saveUi();renderChips();renderTable();syncSel()};
+[['#fWeb','web'],['#fCon','con'],['#fRep','rep'],['#fMk','mk']].forEach(([s,k])=>$(s).addEventListener('change',e=>{ui[k]=e.target.value;justAdded=null;saveUi();renderTable();syncSel()}));
+$('#bClear').onclick=()=>{ui.q='';ui.web=ui.con=ui.rep=ui.mk='';ui.inds=[];justAdded=null;saveUi();renderChips();renderTable();syncSel()};
 function canonInd(name){const k=name.trim().toLowerCase(),m=indCounts();return m.has(k)&&k?m.get(k).label:name.trim()}
 function renameChip(chip){
   const k=chip.dataset.ind,m=indCounts(),cur=k?m.get(k).label:'';
@@ -614,6 +737,7 @@ function plain(l,k){
     case 'website':return l.website?'Yes':'No';
     case 'contacted':return t?'Yes':'No';
     case 'replied':return l.replied?'Yes':'No';
+    case 'mockup':return l.mockup?'Yes':'No';
     case 'total':return String(t);
     case 'e':case 'p':case 'w':case 'm':return String(l[k]);
     case 'interest':return l.interest?String(l.interest):'';
@@ -682,12 +806,12 @@ $('#copyPop').addEventListener('click',async e=>{
 const selLeads=()=>leads.filter(l=>selected.has(l.id));
 $('#bulk').addEventListener('click',e=>{
   const k=e.target.dataset.binc;if(!k)return;const n=selected.size;
-  mutate(()=>selLeads().forEach(l=>logContact(l,k)),`${MBY[k].label} ${n} lead${n===1?'':'s'}`);
+  askScript(k,selLeads(),`${MBY[k].label} ${n} lead${n===1?'':'s'}`);
 });
 $('#bSet').addEventListener('change',e=>{
   const v=e.target.value;e.target.value='';if(!v)return;const n=selected.size;
   mutate(()=>selLeads().forEach(l=>{
-    if(v==='stop')l.next='';else if(v.startsWith('rep'))l.replied=v==='rep1';else if(v.startsWith('web'))l.website=v==='web1';else l.interest=+v.slice(3);
+    if(v==='stop')l.next='';else if(v.startsWith('rep'))setReplied(l,v==='rep1');else if(v.startsWith('mk'))setMockup(l,v==='mk1');else if(v.startsWith('web'))l.website=v==='web1';else l.interest=+v.slice(3);
   }),`Updated ${n} lead${n===1?'':'s'}`);
 });
 $('#bInd').addEventListener('keydown',e=>{if(e.key==='Enter'){const v=e.target.value.trim(),n=selected.size;e.target.value='';mutate(()=>selLeads().forEach(l=>l.industry=v),`Industry set on ${n} lead${n===1?'':'s'}`)}});
@@ -696,10 +820,10 @@ $('#bDesel').onclick=()=>{selected.clear();syncSel()};
 $('#bUndo').onclick=doUndo;
 document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!e.target.closest('input,textarea')){e.preventDefault();doUndo()}
-  if(e.key==='Escape'){$('#copyPop').classList.remove('show');closeNotes();$('#dupO').classList.remove('show');$('#impO').classList.remove('show');$('#colPop').classList.remove('show')}
+  if(e.key==='Escape'){if($('#asO').classList.contains('show'))return closeAssign();if($('#askO').classList.contains('show'))return closeAsk();if($('#scO').classList.contains('show'))return closeSc();$('#copyPop').classList.remove('show');closeNotes();$('#dupO').classList.remove('show');$('#impO').classList.remove('show');$('#colPop').classList.remove('show')}
 });
 $('#bAdd').onclick=()=>{
-  const l=blank();justAdded=l.id;
+  const l=blank();l.added=today();justAdded=l.id;
   mutate(()=>leads.push(l));
   const tr=tb.querySelector(`tr[data-id="${l.id}"]`);if(tr){tr.scrollIntoView({block:'center'});const td=tr.querySelector('td.ed');if(td)startEdit(td,l)}
 };
@@ -708,7 +832,7 @@ $('#bAdd').onclick=()=>{
 let noteLead=null;
 function openNotes(l){
   noteLead=l;$('#noteT').textContent=`#${leads.indexOf(l)+1} ${l.business||'Lead'}`;$('#noteOwner').value=l.owner;$('#noteA').value=l.notes;
-  $('#noteH').innerHTML=l.hist.length?'<b>Contact history</b><br>'+l.hist.slice().reverse().map(h=>{const[d,c]=h.split(':');return fmtD(d)+' — '+MBY[c].label}).join('<br>'):'No contacts logged yet.';
+  $('#noteH').innerHTML=l.hist.length?'<b>Contact history</b><br>'+l.hist.slice().reverse().map(h=>{const e=parseH(h),sc=sById(e.sid);return fmtD(e.date)+' — '+MBY[e.code].label+(sc?' · '+esc(sc.name):'')}).join('<br>'):'No contacts logged yet.';
   $('#noteO').classList.add('show');$('#noteA').focus();
 }
 function closeNotes(){
@@ -751,7 +875,7 @@ function impLeads(){
   const data=$('#impH').checked?imp.rows.slice(1):imp.rows,ind=impIndustry(),out=[];let dup=0;
   const seen=new Set(leads.map(l=>l.business.trim().toLowerCase()+'|'+digits(l.phone)+'|'+l.email.trim().toLowerCase()));
   for(const r of data){
-    const l=blank();
+    const l=blank();l.added=today();
     imp.map.forEach((f,i)=>{if(!f)return;if(f==='website')l.website=ynVal(r[i]);else l[f]=l[f]?l[f]+' '+r[i]:r[i]});
     l.industry=l.industry?canonInd(l.industry):ind;
     if(!l.business&&!l.email&&!l.phone)continue;
@@ -828,8 +952,10 @@ function mergeInto(k,others){
     METHODS.forEach(m=>k[m.k]+=o[m.k]);
     k.hist=k.hist.concat(o.hist);
     if(o.notes&&!k.notes.includes(o.notes))k.notes=k.notes?k.notes+'\n'+o.notes:o.notes;
-    k.replied=k.replied||o.replied;k.website=k.website||o.website;k.interest=Math.max(k.interest,o.interest);
+    k.replied=k.replied||o.replied;if(o.mockup&&(!k.mockup||(o.mockupOn&&o.mockupOn<k.mockupOn))){k.mockup=true;k.mockupOn=o.mockupOn||k.mockupOn}k.website=k.website||o.website;k.interest=Math.max(k.interest,o.interest);
     if(o.next&&(!k.next||o.next<k.next))k.next=o.next;
+    if(o.added&&(!k.added||o.added<k.added))k.added=o.added;
+    if(o.repliedOn&&(!k.repliedOn||o.repliedOn<k.repliedOn))k.repliedOn=o.repliedOn;
   }
   k.hist.sort();
 }
@@ -853,6 +979,297 @@ $('#dupGo').onclick=()=>{
   mutate(()=>{const ids=new Set();on.forEach(d=>{const k=byId(d.keep.id),r=d.rest.map(l=>byId(l.id));mergeInto(k,r);r.forEach(l=>ids.add(l.id))});leads=leads.filter(l=>!ids.has(l.id))},`Merged duplicates · removed ${n} lead${n===1?'':'s'}`);
 };
 
+/* ---------- views ---------- */
+let view='leads',statsDay=null;
+function setView(){
+  const h=location.hash.replace('#','');view=['stats','scripts'].includes(h)?h:'leads';
+  document.querySelectorAll('.tabs a').forEach(a=>a.classList.toggle('on',a.dataset.view===view));
+  $('#vLeads').style.display=view==='leads'?'':'none';$('#vStats').style.display=view==='stats'?'':'none';$('#vScripts').style.display=view==='scripts'?'':'none';
+  $('#leadTools').style.display=view==='leads'?'contents':'none';$('#scriptTools').style.display=view==='scripts'?'contents':'none';
+  if(view!=='stats')statsDay=null;
+  syncSel();renderView();scrollTo(0,0);
+}
+window.addEventListener('hashchange',setView);
+function renderView(){if(view==='stats')renderDay();else if(view==='scripts')renderScripts()}
+const plural=(n,w)=>`${n} ${w}${n===1?'':'s'}`;
+
+/* ---------- today's stats ---------- */
+function dayStats(D){
+  const r={contacted:0,newc:0,fu:0,added:0,replies:0,mockups:0,E:0,P:0,W:0,M:0,rows:[]};
+  for(const l of leads){
+    if(l.added===D)r.added++;
+    if(l.mockup&&l.mockupOn===D)r.mockups++;
+    if(l.replied&&l.repliedOn===D)r.replies++;
+    const es=l.hist.map(parseH),on=es.filter(e=>e.date===D);
+    if(!on.length){if(l.replied&&l.repliedOn===D)r.rows.push({l,on,first:false,rep:true});continue}
+    r.contacted++;const first=es.reduce((m,e)=>e.date<m?e.date:m,'9999')===D;
+    first?r.newc++:r.fu++;on.forEach(e=>r[e.code]++);
+    r.rows.push({l,on,first,rep:l.replied&&l.repliedOn===D});
+  }
+  return r;
+}
+function rangeStats(F,T){
+  const r={contacted:0,newc:0,fu:0,added:0,replies:0,mockups:0,E:0,P:0,W:0,M:0};
+  for(const l of leads){
+    if(l.added&&l.added>=F&&l.added<=T)r.added++;
+    if(l.mockup&&l.mockupOn&&l.mockupOn>=F&&l.mockupOn<=T)r.mockups++;
+    if(l.replied&&l.repliedOn&&l.repliedOn>=F&&l.repliedOn<=T)r.replies++;
+    if(!l.hist.length)continue;
+    let first='9999';const days=new Set();
+    for(const h of l.hist){const e=parseH(h);if(e.date<first)first=e.date;if(e.date>=F&&e.date<=T){r[e.code]++;days.add(e.date)}}
+    if(!days.size)continue;
+    r.contacted++;if(first>=F)r.newc++;days.forEach(d=>{if(d!==first)r.fu++});
+  }
+  return r;
+}
+const SMET=[['contacted','Leads contacted'],['newc','New leads contacted'],['fu','Follow-ups completed'],['added','Leads added'],['replies','Replies received'],['mockups','Mockups sent'],['P','Cold calls completed'],['E','Emails sent'],['W','WhatsApp messages sent'],['M','Messages sent']];
+const STACK=[['P','Cold calls','#257de0'],['E','Emails','#f47230'],['W','WhatsApps','#00b894'],['M','Messages','#f2a600']];
+if(!ui.statsPer)ui.statsPer='day';
+if(!ui.chartMet)ui.chartMet='contacted';
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function monday(D){const d=pISO(D),w=(d.getDay()+6)%7;d.setDate(d.getDate()-w);return iso(d)}
+function period(per,A){
+  const d=pISO(A);
+  if(per==='week'){const F=monday(A),T=addDays(F,6);
+    return{F,T,label:`${fmtD(F)} – ${fmtD(T)}`,buckets:[...Array(7)].map((_,i)=>{const x=addDays(F,i);return{F:x,T:x,lab:pISO(x).toLocaleDateString('en-GB',{weekday:'short'})+' '+pISO(x).getDate(),long:pISO(x).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'}),day:x}})}}
+  if(per==='month'){const F=iso(new Date(d.getFullYear(),d.getMonth(),1)),T=iso(new Date(d.getFullYear(),d.getMonth()+1,0)),n=pISO(T).getDate();
+    return{F,T,label:pISO(F).toLocaleDateString('en-GB',{month:'long',year:'numeric'}),buckets:[...Array(n)].map((_,i)=>{const x=addDays(F,i);return{F:x,T:x,lab:String(i+1),long:pISO(x).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}),day:x}})}}
+  const y=d.getFullYear();
+  return{F:y+'-01-01',T:y+'-12-31',label:String(y),buckets:MON.map((m,i)=>({F:iso(new Date(y,i,1)),T:iso(new Date(y,i+1,0)),lab:m,long:m+' '+y,month:iso(new Date(y,i,1))}))};
+}
+function shiftAnchor(per,A,dir){const d=pISO(A);
+  if(per==='day')return addDays(A,dir);if(per==='week')return addDays(A,7*dir);
+  if(per==='month')return iso(new Date(d.getFullYear(),d.getMonth()+dir,1));return iso(new Date(d.getFullYear()+dir,0,1))}
+function renderDay(){
+  const per=ui.statsPer,A=statsDay||today(),T0=today();
+  const card=(n,lab)=>`<div class="scard ${n?'':'zero'}"><b>${n}</b><span>${lab}</span></div>`;
+  const grid=s=>`<div class="sgrid"><h3>Leads</h3>${SMET.slice(0,6).map(([k,l])=>card(s[k],l)).join('')}<h3>Outreach sent</h3>${SMET.slice(6).map(([k,l])=>card(s[k],l)).join('')}</div>`;
+  const seg=`<div class="seg">${[['day','Day'],['week','Week'],['month','Month'],['year','Year']].map(([k,l])=>`<button data-per="${k}" class="${per===k?'on':''}">${l}</button>`).join('')}</div>`;
+  if(per==='day'){
+    const D=A,isT=D===T0,s=dayStats(D);
+    const tag=(e)=>{const sc=sById(e.sid);return `<span class="mtag">${MBY[e.code].label}${sc?' · '+esc(sc.name):''}</span>`};
+    $('#vStats').innerHTML=`<div class="vhead"><h2>${isT?"Today's stats":'Stats for '+pISO(D).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})}</h2><span class="sp"></span>${seg}
+      <div class="dnav"><button class="btn small" data-dd="-1">◀</button><input type="date" id="dDay" value="${D}" max="${T0}"><button class="btn small" data-dd="1" ${isT?'disabled':''}>▶</button>${isT?'':'<button class="btn small" data-dd="0">Today</button>'}</div></div>
+      ${grid(s)}
+      <section class="card"><header style="cursor:default"><h2>Activity${isT?' today':''}</h2><span class="count ${s.rows.length?'':'zero'}">${s.rows.length}</span></header>
+        <div class="daylist">${s.rows.length?s.rows.map(x=>`<div class="r"><span class="nm">${esc(x.l.business)||'(no name)'}</span>${x.on.length?`<span class="mtag ${x.first?'new':'fu'}">${x.first?'New lead':'Follow-up'}</span>`:''}${x.on.map(tag).join('')}${x.rep?'<span class="mtag rep">Replied</span>':''}<span class="sp"></span><span style="color:#5b6168;font-size:12.5px">${esc(x.l.industry)}</span></div>`).join(''):`<div class="empty">Nothing logged${isT?' yet today':' on this day'}.</div>`}</div>
+      </section>
+      <p style="color:#5b6168;font-size:12.5px;margin-top:10px">New leads contacted = first-ever contact on this day. Follow-ups completed = leads contacted again after an earlier contact. Replies count leads marked “Replied” on this day.</p>`;
+    return;
+  }
+  const P=period(per,A),cur=T0>=P.F&&T0<=P.T,tot=rangeStats(P.F,P.T);
+  const data=P.buckets.map(b=>({...b,future:b.F>T0,s:b.F>T0?null:rangeStats(b.F,b.T)}));
+  const what={week:'week',month:'month',year:'year'}[per];
+  $('#vStats').innerHTML=`<div class="vhead"><h2>${cur?'This '+what:P.label}</h2><span class="sp"></span>${seg}
+      <div class="dnav"><button class="btn small" data-pd="-1">◀</button><span class="plabel">${P.label}</span><button class="btn small" data-pd="1" ${cur?'disabled':''}>▶</button>${cur?'':`<button class="btn small" data-pd="0">This ${what}</button>`}</div></div>
+    ${grid(tot)}
+    <section class="card chartcard">
+      <div class="mchips">${SMET.map(([k,l])=>`<button class="chip ${ui.chartMet===k?'on':''}" data-met="${k}">${l}</button>`).join('')}<button class="chip ${ui.chartMet==='stack'?'on':''}" data-met="stack">Outreach by method</button></div>
+      ${chartSvg(data,per)}
+      ${tableHtml(data)}
+    </section>
+    <p style="color:#5b6168;font-size:12.5px;margin-top:10px">${per==='year'?'Each bar is one month.':'Each bar is one day — click a bar to open that day.'} Leads contacted counts each lead once per ${per==='year'?'bar':'period'} in the totals; follow-ups count every day a lead was contacted again.</p>`;
+  wireChart(data,per);
+}
+function niceMax(v){if(v<=4)return 4;const p=Math.pow(10,Math.floor(Math.log10(v))),f=v/p;return (f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*p}
+function chartSvg(data,per){
+  const W=1000,H=270,L=34,R=8,Tp=10,B=28,ph=H-Tp-B,pw=W-L-R,n=data.length,bw=pw/n;
+  const stack=ui.chartMet==='stack',val=d=>d.s?(stack?STACK.reduce((a,[k])=>a+d.s[k],0):d.s[ui.chartMet]):0;
+  const mx=niceMax(Math.max(0,...data.map(val))),y=v=>Tp+ph-v/mx*ph,step=mx/4;
+  let g='';
+  for(let i=0;i<=4;i++){const v=step*i,yy=y(v);g+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="${i?'#e7e7e7':'#c2c2c2'}" stroke-width="1"/><text x="${L-8}" y="${yy+4}" text-anchor="end" font-size="11" fill="#666">${Math.round(v*10)/10}</text>`}
+  const barW=Math.max(3,Math.min(44,bw*0.62));
+  const rtop=(x,yt,w,h,r)=>{r=Math.min(r,h,w/2);return `M${x},${yt+h}V${yt+r}Q${x},${yt} ${x+r},${yt}H${x+w-r}Q${x+w},${yt} ${x+w},${yt+r}V${yt+h}Z`};
+  let bars='',labs='';
+  const every=n>20?(innerWidth<900?5:2):1;
+  data.forEach((d,i)=>{
+    const cx=L+bw*i+bw/2,x=cx-barW/2;
+    if(i%every===0||i===n-1&&every===1)labs+=`<text x="${cx}" y="${H-9}" text-anchor="middle" font-size="11" fill="${d.future?'#bbb':'#666'}">${esc(d.lab)}</text>`;
+    if(!d.s)return;
+    if(stack){let base=0;const segs=STACK.filter(([k])=>d.s[k]>0);
+      segs.forEach(([k,,c],j)=>{const v=d.s[k],y0=y(base),y1=y(base+v),top=j===segs.length-1;let h=y0-y1-(j>0?2:0);if(h<=0){base+=v;return}
+        bars+=top?`<path d="${rtop(x,y1,barW,h,4)}" fill="${c}"/>`:`<rect x="${x}" y="${y1+ (0)}" width="${barW}" height="${h}" fill="${c}"/>`;base+=v});
+    }else{const v=val(d);if(v>0){const yt=y(v);bars+=`<path d="${rtop(x,yt,barW,Tp+ph-yt,4)}" fill="#257de0"/>`}}
+  });
+  const hits=data.map((d,i)=>`<rect class="hit" data-i="${i}" x="${L+bw*i}" y="${Tp}" width="${bw}" height="${ph}"/>`).join('');
+  const leg=stack?`<div class="legend">${STACK.map(([,l,c])=>`<span><i style="background:${c}"></i>${l}</span>`).join('')}</div>`:'';
+  return `${leg}<div class="chartbox"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(stack?'Outreach by method':SMET.find(m=>m[0]===ui.chartMet)[1])} per ${per==='year'?'month':'day'}">${g}${hits}<g pointer-events="none">${bars}</g>${labs}</svg><div class="ctip" id="ctip"></div></div>`;
+}
+function tableHtml(data){
+  return `<details class="tbl"><summary>Show as table</summary><div style="overflow:auto"><table><thead><tr><th></th>${SMET.map(([,l])=>`<th>${l}</th>`).join('')}</tr></thead><tbody>${data.filter(d=>d.s).map(d=>`<tr><td>${esc(d.long)}</td>${SMET.map(([k])=>`<td>${d.s[k]}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>`;
+}
+function wireChart(data,per){
+  const box=$('#vStats .chartbox');if(!box)return;const tip=$('#ctip'),stack=ui.chartMet==='stack';
+  box.addEventListener('mousemove',e=>{
+    const h=e.target.closest('.hit');if(!h){tip.style.display='none';return}
+    const d=data[+h.dataset.i];
+    let body;
+    if(!d.s)body='<span style="color:#666">Not yet</span>';
+    else if(stack)body=STACK.slice().reverse().map(([k,l,c])=>`<div><span class="sw" style="background:${c}"></span>${l}: <b style="display:inline">${d.s[k]}</b></div>`).join('');
+    else body=`${SMET.find(m=>m[0]===ui.chartMet)[1]}: <b style="display:inline">${d.s[ui.chartMet]}</b>`;
+    tip.innerHTML=`<b>${esc(d.long)}</b>${body}`;tip.style.display='block';
+    const r=box.getBoundingClientRect();let x=e.clientX-r.left+14;if(x+tip.offsetWidth>r.width)x=e.clientX-r.left-tip.offsetWidth-14;
+    tip.style.left=x+'px';tip.style.top=Math.max(0,e.clientY-r.top-tip.offsetHeight-8)+'px';
+  });
+  box.addEventListener('mouseleave',()=>tip.style.display='none');
+  box.addEventListener('click',e=>{const h=e.target.closest('.hit');if(!h)return;const d=data[+h.dataset.i];if(d.future)return;
+    if(d.day){ui.statsPer='day';statsDay=d.day>=today()?null:d.day}else{ui.statsPer='month';statsDay=d.month}saveUi();renderDay()});
+}
+$('#vStats').addEventListener('click',e=>{
+  const sp=e.target.closest('[data-per]');if(sp){ui.statsPer=sp.dataset.per;saveUi();if(ui.statsPer==='day'&&statsDay&&statsDay>=today())statsDay=null;renderDay();return}
+  const mt=e.target.closest('[data-met]');if(mt){ui.chartMet=mt.dataset.met;saveUi();renderDay();return}
+  const pd=e.target.closest('[data-pd]');if(pd){const d=+pd.dataset.pd;statsDay=d===0?null:shiftAnchor(ui.statsPer,statsDay||today(),d);if(statsDay&&statsDay>today())statsDay=null;renderDay();return}
+  const b=e.target.closest('[data-dd]');if(!b)return;const d=+b.dataset.dd;statsDay=d===0?null:addDays(statsDay||today(),d);if(statsDay&&statsDay>=today())statsDay=null;renderDay()});
+$('#vStats').addEventListener('change',e=>{if(e.target.id==='dDay'&&e.target.value){statsDay=e.target.value>=today()?null:e.target.value;renderDay()}});
+
+/* ---------- scripts ---------- */
+function scriptStats(){
+  const st=new Map(),key=e=>e.sid&&sById(e.sid)?e.sid:'none:'+e.code;
+  const get=k=>{if(!st.has(k))st.set(k,{uses:0,leads:new Set(),replies:0});return st.get(k)};
+  for(const l of leads){
+    const es=l.hist.map(parseH);if(!es.length)continue;
+    es.forEach(e=>{const x=get(key(e));x.uses++;x.leads.add(l.id)});
+    if(l.replied){
+      const cut=l.repliedOn||'9999',pool=es.filter(e=>e.date<=cut),use=pool.length?pool:es,tagged=use.filter(e=>e.sid&&sById(e.sid));
+      const e=(tagged.length?tagged:use)[(tagged.length?tagged:use).length-1];get(key(e)).replies++;
+    }
+  }
+  return st;
+}
+function renderScripts(){
+  const st=scriptStats(),z={uses:0,leads:new Set(),replies:0};
+  const row=(name,prev,x,id,none)=>{const n=x.leads.size,rt=n?Math.round(x.replies/n*100):0;
+    return `<tr class="${none?'none':''}" ${id?`data-sc="${id}"`:''}><td>${none?`<i>${name}</i>`:`<div class="snm" data-sced>${esc(name)}</div>`}${prev?`<div class="prev">${esc(prev)}</div>`:''}</td>
+      <td class="n">${n}</td><td class="n">${x.replies}</td><td class="n"><div class="rate"><b>${n?rt+'%':'–'}</b><div class="bar"><i style="width:${rt}%"></i></div></div></td><td class="n">${x.uses}</td>
+      <td class="n">${id?`<button class="btn small" data-scadd title="Credit leads you contacted earlier to this script">Add past contacts</button> <button class="btn small" data-sccopy>Copy text</button> <button class="btn small" data-sced>Edit</button>`:''}</td></tr>`};
+  const groups=METHODS.map(m=>{
+    const list=scripts.filter(x=>x.method===m.k).map(x=>({x,s:st.get(x.id)||z})).sort((a,b)=>{const ra=a.s.leads.size?a.s.replies/a.s.leads.size:-1,rb=b.s.leads.size?b.s.replies/b.s.leads.size:-1;return rb-ra||b.s.leads.size-a.s.leads.size||a.x.name.localeCompare(b.x.name)});
+    const none=st.get('none:'+m.code);
+    const title={e:'Email',p:'Cold call',w:'WhatsApp',m:'Message'}[m.k];
+    return `<section class="card"><header style="cursor:default"><h2>${title} scripts</h2><span class="count ${list.length?'':'zero'}">${list.length}</span><span class="sp"></span><button class="btn small" data-scnew="${m.k}">+ New ${m.k==='w'?title:title.toLowerCase()} script</button></header>
+      ${list.length||none?`<div style="overflow:auto"><table class="sctbl"><thead><tr><th>Script</th><th>Leads contacted</th><th>Replies</th><th>Reply rate</th><th>Times used</th><th></th></tr></thead><tbody>
+      ${list.map(o=>row(o.x.name,o.x.text.replace(/\s+/g,' ').slice(0,140),o.s,o.x.id)).join('')}${none?row('No script logged','',none,'',true):''}</tbody></table></div>`:`<div class="empty">No ${m.k==='w'?title:title.toLowerCase()} scripts yet.</div>`}
+    </section>`}).join('');
+  $('#vScripts').innerHTML=`<div class="vhead"><h2>Scripts</h2><p>Every time you log a contact you pick the script you used. Use “Add past contacts” to credit leads you contacted before a script was set up. Reply rate = replies ÷ leads contacted with that script. A reply is credited to the last script used on that lead before it replied, so each reply only counts once.</p></div>${groups}`;
+}
+let scEditing=null;
+function openSc(sc,method){
+  scEditing=sc||null;$('#scT').textContent=sc?'Edit script':'New script';
+  $('#scM').innerHTML=METHODS.map(m=>`<option value="${m.k}">${SM[m.k]}</option>`).join('');
+  $('#scN').value=sc?sc.name:'';$('#scM').value=sc?sc.method:(method||'e');$('#scX').value=sc?sc.text:'';$('#scMsg').textContent='';
+  $('#scDel').style.display=sc?'':'none';$('#scO').classList.add('show');$('#scN').focus();
+}
+function closeSc(){$('#scO').classList.remove('show');scEditing=null}
+$('#scC').onclick=closeSc;
+$('#scGo').onclick=()=>{
+  const name=$('#scN').value.trim();if(!name){$('#scMsg').textContent='Give the script a name.';return}
+  const method=$('#scM').value,text=$('#scX').value,ed=scEditing;closeSc();
+  if(ed)mutate(()=>{const x=sById(ed.id);x.name=name;x.method=method;x.text=text},'Script saved');
+  else mutate(()=>scripts.push({id:newId(),name,method,text,created:today()}),'Script added');
+};
+$('#scDel').onclick=()=>{const ed=scEditing;if(!ed)return;closeSc();mutate(()=>{scripts=scripts.filter(x=>x.id!==ed.id)},`Deleted “${ed.name}” — its contacts now count as “No script”`)};
+$('#bNewScript').onclick=()=>openSc(null,'e');
+$('#vScripts').addEventListener('click',async e=>{
+  const nw=e.target.closest('[data-scnew]');if(nw)return openSc(null,nw.dataset.scnew);
+  const tr=e.target.closest('tr[data-sc]');if(!tr)return;const sc=sById(tr.dataset.sc);if(!sc)return;
+  if(e.target.closest('[data-scadd]'))return openAssign(sc);
+  if(e.target.closest('[data-sccopy]')){if(!sc.text)return toast('This script has no text saved.');toast(await writeClip(sc.text)?`Copied “${sc.name}”`:'Copy was blocked by the browser.');return}
+  if(e.target.closest('[data-sced]'))openSc(sc);
+});
+
+/* ---------- add past contacts to a script ---------- */
+let asg=null;
+const untagged=e=>!e.sid||!sById(e.sid);
+function openAssign(sc){
+  const code=MBY[sc.method].code,word={e:'email',p:'call',w:'WhatsApp',m:'message'}[sc.method];
+  const cands=[];
+  for(const l of leads){
+    const es=l.hist.map(parseH).filter(e=>e.code===code);if(!es.length)continue;
+    const mine=es.filter(e=>e.sid===sc.id).length,unt=es.filter(untagged).length,oth=es.length-mine-unt;
+    const others=[...new Set(es.filter(e=>!untagged(e)&&e.sid!==sc.id).map(e=>sById(e.sid).name))];
+    cands.push({l,es,mine,unt,oth,others,init:mine>0});
+  }
+  asg={sc,code,word,cands,chk:new Set(cands.filter(c=>c.init).map(c=>c.l.id))};
+  $('#asT').textContent=`Add past contacts to “${sc.name}”`;
+  $('#asP').textContent=`Tick the leads you ${sc.method==='p'?'called':sc.method==='e'?'emailed':'messaged'} using this script. Their ${word}s with no script are credited to it, so its leads contacted, replies and reply rate update.`;
+  $('#asF').innerHTML=`<option value="none">Not on any script</option><option value="this">On this script</option><option value="all">All leads with ${sc.method==='e'?'an':'a'} ${word}</option>`;
+  const m=indCounts(),keys=[...m.keys()].filter(Boolean).sort();
+  $('#asI').innerHTML='<option value="*">All industries</option>'+keys.map(k=>`<option value="${esc(k)}">${esc(m.get(k).label)}</option>`).join('');
+  $('#asQ').value='';$('#asF').value=cands.some(c=>c.unt)?'none':'all';
+  renderAssign();$('#asO').classList.add('show');$('#asQ').focus();
+}
+function asShown(){
+  const f=$('#asF').value,ind=$('#asI').value,q=$('#asQ').value.trim().toLowerCase();
+  return asg.cands.filter(c=>{
+    if(f==='none'&&!c.unt)return false;if(f==='this'&&!c.mine)return false;
+    if(ind!=='*'&&c.l.industry.trim().toLowerCase()!==ind)return false;
+    if(q&&!(c.l.business+' '+c.l.email+' '+c.l.phone+' '+c.l.owner).toLowerCase().includes(q))return false;return true});
+}
+function renderAssign(){
+  const sh=asShown(),w=asg.word;
+  $('#asL').innerHTML=sh.length?sh.map(c=>{
+    const st=c.mine&&!c.unt&&!c.oth?'<span class="mtag rep">This script</span>':c.others.length?`<span class="mtag">On ${esc(c.others.join(', '))}</span>`:'';
+    const dates=c.es.map(e=>fmtD(e.date)).join(', ');
+    return `<label class="asr"><input type="checkbox" data-as="${c.l.id}" ${asg.chk.has(c.l.id)?'checked':''}><span class="nm">${esc(c.l.business)||'(no name)'}</span><span class="mt">${plural(c.es.length,w)} · ${esc(dates)}${c.unt&&(c.mine||c.oth)?` · ${c.unt} with no script`:''}${c.l.replied?' · replied':''}</span>${st}</label>`}).join('')
+    :`<div class="empty">${asg.cands.length?'No leads match.':`No leads have ${w==='email'?'an':'a'} ${w} logged yet.`}</div>`;
+  const add=asg.cands.filter(c=>asg.chk.has(c.l.id)&&!c.init).length,rem=asg.cands.filter(c=>!asg.chk.has(c.l.id)&&c.init).length;
+  const fill=asg.cands.filter(c=>asg.chk.has(c.l.id)&&c.init&&c.unt).length;
+  $('#asMsg').textContent=add||rem||fill?[add?`Add ${plural(add,'lead')}`:'',rem?`remove ${plural(rem,'lead')}`:'',fill?`credit the rest of ${plural(fill,'lead')}`:''].filter(Boolean).join(', '):'No changes yet';
+  $('#asGo').disabled=!(add||rem||fill);
+}
+['#asQ'].forEach(x=>$(x).addEventListener('input',renderAssign));
+['#asF','#asI'].forEach(x=>$(x).addEventListener('change',renderAssign));
+$('#asL').addEventListener('change',e=>{const id=e.target.dataset.as;if(!id)return;e.target.checked?asg.chk.add(id):asg.chk.delete(id);renderAssign()});
+$('#asAll').onclick=()=>{asShown().forEach(c=>asg.chk.add(c.l.id));renderAssign()};
+$('#asNone').onclick=()=>{asShown().forEach(c=>asg.chk.delete(c.l.id));renderAssign()};
+function closeAssign(){$('#asO').classList.remove('show');asg=null}
+$('#asC').onclick=closeAssign;
+$('#asO').addEventListener('mousedown',e=>{if(e.target.id==='asO')closeAssign()});
+$('#asGo').onclick=()=>{
+  const{sc,code,cands,chk}=asg;
+  const plan=cands.map(c=>({id:c.l.id,on:chk.has(c.l.id),init:c.init,unt:c.unt}));
+  const add=plan.filter(p=>p.on&&!p.init).length,rem=plan.filter(p=>!p.on&&p.init).length;
+  closeAssign();
+  mutate(()=>{for(const p of plan){const l=byId(p.id);if(!l)continue;
+    const fix=fn=>{l.hist=l.hist.map(h=>{const e=parseH(h);if(e.code!==code)return h;const sid=fn(e);return e.date+':'+e.code+(sid?':'+sid:'')})};
+    if(p.on){
+      if(p.unt)fix(e=>untagged(e)?sc.id:e.sid);
+      else if(!p.init)fix(()=>sc.id);
+    }else if(p.init){fix(e=>e.sid===sc.id?'':e.sid)}
+  }},[add?`Added ${plural(add,'lead')} to “${sc.name}”`:'',rem?`removed ${plural(rem,'lead')}`:''].filter(Boolean).join(', ')||`Updated “${sc.name}”`);
+};
+
+/* ---------- which script? (asked when logging contacts) ---------- */
+if(!ui.lastScript)ui.lastScript={};
+let ask=null;
+function askScript(k,list,msg){
+  const opts=scripts.filter(x=>x.method===k);
+  const last=ui.lastScript[k];const pre=opts.some(x=>x.id===last)?last:(last==='' ?'':(opts.length===1?opts[0].id:''));
+  ask={k,list,msg,sel:pre};
+  $('#askT').textContent=`${MBY[k].label} ${list.length===1?(list[0].business||'1 lead'):list.length+' leads'} — which script?`;
+  $('#askL').innerHTML=opts.map(x=>`<label class="opt" data-v="${x.id}"><input type="radio" name="askr" value="${x.id}"><div><b>${esc(x.name)}</b>${x.text?`<small>${esc(x.text.replace(/\s+/g,' ').slice(0,110))}</small>`:''}</div></label>`).join('')+
+    `<label class="opt" data-v=""><input type="radio" name="askr" value=""><div><b>No script</b><small>Freestyle / not tracked</small></div></label>`+
+    `<label class="opt" data-v="__new"><input type="radio" name="askr" value="__new"><div><b>+ New ${k==='w'?SM[k]:SM[k].toLowerCase()} script</b><small>Save it now and use it for this contact</small></div></label>`;
+  $('#askN').value='';$('#askX').value='';$('#askMsg').textContent='';
+  selAsk(pre);$('#askO').classList.add('show');$('#askGo').focus();
+}
+function selAsk(v){ask.sel=v;document.querySelectorAll('#askL .opt').forEach(o=>{const on=o.dataset.v===v;o.classList.toggle('on',on);o.querySelector('input').checked=on});
+  $('#askNew').style.display=v==='__new'?'':'none';if(v==='__new')$('#askN').focus();$('#askGo').textContent=v==='__new'?'Save script & log contact':'Log contact'}
+function closeAsk(){$('#askO').classList.remove('show');ask=null}
+$('#askL').addEventListener('click',e=>{const o=e.target.closest('.opt');if(o){e.preventDefault();selAsk(o.dataset.v)}});
+$('#askL').addEventListener('dblclick',e=>{const o=e.target.closest('.opt');if(o&&o.dataset.v!=='__new')$('#askGo').click()});
+$('#askC').onclick=closeAsk;
+$('#askO').addEventListener('mousedown',e=>{if(e.target.id==='askO')closeAsk()});
+$('#askO').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.target.closest('textarea')){e.preventDefault();$('#askGo').click()}});
+$('#askGo').onclick=()=>{
+  if(!ask)return;const{k,list,msg}=ask;let sid=ask.sel,ns=null;
+  if(sid==='__new'){const name=$('#askN').value.trim();if(!name){$('#askMsg').textContent='Give the new script a name.';$('#askN').focus();return}
+    ns={id:newId(),name,method:k,text:$('#askX').value,created:today()};sid=ns.id}
+  ui.lastScript[k]=sid;saveUi();closeAsk();
+  const ids=list.map(l=>l.id);
+  mutate(()=>{if(ns)scripts.push(ns);ids.forEach(id=>{const l=byId(id);if(l)logContact(l,k,sid)})},msg+(ns?` · ${ns.name}`:sid&&sById(sid)?` · ${sById(sid).name}`:''));
+};
+
 /* ---------- toast ---------- */
 let toastT=null;
 function toast(msg,canUndo){$('#toastT').textContent=msg;$('#toastU').style.display=canUndo?'':'none';$('#toast').classList.add('show');clearTimeout(toastT);toastT=setTimeout(hideToast,6000)}
@@ -860,13 +1277,17 @@ function hideToast(){$('#toast').classList.remove('show')}
 $('#toastU').onclick=doUndo;
 
 /* ---------- Excel read / write ---------- */
-const HEAD=['#','Business Name','Owner Name(s)','Email','Phone','Industry','Website','Contacted','Replied','Total Contacts','Emailed','Phoned','WhatsApped','Messaged','Interest (1-5)','Notes','Last Contacted','Last Method','Next Follow-up','History','ID'];
-const WIDTHS=[5,30,22,30,16,18,9,10,9,13,9,9,12,10,13,50,14,13,14,24,16];
+const HEAD=['#','Business Name','Owner Name(s)','Email','Phone','Industry','Website','Contacted','Replied','Total Contacts','Emailed','Phoned','WhatsApped','Messaged','Interest (1-5)','Notes','Last Contacted','Last Method','Next Follow-up','Added','Replied On','Mockup Sent','Mockup Sent On','History','ID'];
+const WIDTHS=[5,30,22,30,16,18,9,10,9,13,9,9,12,10,13,50,14,13,14,12,12,12,14,24,16];
+const SM={e:'Email',p:'Phone call',w:'WhatsApp',m:'Message'};
 function buildWb(){
-  const rows=[HEAD].concat(leads.map((l,i)=>{const a=lastOf(l);return[i+1,l.business,l.owner,l.email,String(l.phone),l.industry,l.website?'Yes':'No',total(l)?'Yes':'No',l.replied?'Yes':'No',total(l),l.e,l.p,l.w,l.m,l.interest||'',l.notes,a?a.date:'',a?a.m.label:'',l.next,l.hist.join(';'),l.id]}));
+  const rows=[HEAD].concat(leads.map((l,i)=>{const a=lastOf(l);return[i+1,l.business,l.owner,l.email,String(l.phone),l.industry,l.website?'Yes':'No',total(l)?'Yes':'No',l.replied?'Yes':'No',total(l),l.e,l.p,l.w,l.m,l.interest||'',l.notes,a?a.date:'',a?a.m.label:'',l.next,l.added||'',l.repliedOn||'',l.mockup?'Yes':'No',l.mockupOn||'',l.hist.join(';'),l.id]}));
   const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=WIDTHS.map(w=>({wch:w}));
   if(leads.length)ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:leads.length,c:HEAD.length-1}})};
-  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Leads');return wb;
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Leads');
+  const ss=XLSX.utils.aoa_to_sheet([['ID','Name','Method','Script','Created']].concat(scripts.map(x=>[x.id,x.name,SM[x.method],x.text,x.created||''])));
+  ss['!cols']=[{wch:14},{wch:30},{wch:12},{wch:80},{wch:12}];XLSX.utils.book_append_sheet(wb,ss,'Scripts');
+  return wb;
 }
 function dateStr(v){
   if(v instanceof Date&&!isNaN(v))return iso(new Date(v.getTime()+432e5));
@@ -890,12 +1311,18 @@ function parseWb(wb){
     l.website=yn(r,'Website');l.replied=yn(r,'Replied');
     l.e=num(r,'Emailed');l.p=num(r,'Phoned');l.w=num(r,'WhatsApped');l.m=num(r,'Messaged');
     l.interest=Math.min(5,num(r,'Interest (1-5)'));l.notes=s(r,'Notes');l.next=dateStr(g(r,'Next Follow-up'));
-    l.hist=s(r,'History').split(';').map(x=>x.trim()).filter(x=>/^\d{4}-\d\d-\d\d:[EPWM]$/.test(x));
+    l.hist=s(r,'History').split(';').map(x=>x.trim()).filter(x=>/^\d{4}-\d\d-\d\d:[EPWM](:[a-z0-9]+)?$/i.test(x));
+    l.added=dateStr(g(r,'Added'));l.mockup=yn(r,'Mockup Sent');l.mockupOn=l.mockup?dateStr(g(r,'Mockup Sent On')):'';l.repliedOn=l.replied?dateStr(g(r,'Replied On')):'';
     if(!l.hist.length){const d=dateStr(g(r,'Last Contacted')),m=METHODS.find(m=>m.label.toLowerCase()===s(r,'Last Method').toLowerCase());if(d&&m)l.hist=[d+':'+m.code]}
     const id=s(r,'ID');if(id&&!ids.has(id))l.id=id;ids.add(l.id);
     out.push(l);
   }
-  return{tracker:true,leads:out};
+  const sc=[],ss=wb.Sheets['Scripts'];
+  if(ss){const sa=XLSX.utils.sheet_to_json(ss,{header:1,defval:'',raw:false});const sh={};(sa[0]||[]).forEach((c,i)=>sh[String(c).trim().toLowerCase()]=i);
+    for(const r of sa.slice(1)){const id=String(r[sh.id]??'').trim(),name=String(r[sh.name]??'').trim();if(!id||!name)continue;
+      const mt=String(r[sh.method]??'').trim().toLowerCase(),method=Object.keys(SM).find(k=>SM[k].toLowerCase()===mt||mt.startsWith(SM[k].toLowerCase().split(' ')[0]))||'e';
+      sc.push({id,name,method,text:String(r[sh.script]??''),created:dateStr(r[sh.created])})}}
+  return{tracker:true,leads:out,scripts:sc};
 }
 
 /* ---------- file link (File System Access) ---------- */
@@ -907,7 +1334,7 @@ function idb(mode,fn){return new Promise((res,rej)=>{try{const o=indexedDB.open(
 const idbGet=k=>idb('readonly',s=>s.get(k)).catch(()=>null);
 const idbSet=(k,v)=>idb('readwrite',s=>s.put(v,k)).catch(()=>null);
 const idbDel=k=>idb('readwrite',s=>s.delete(k)).catch(()=>null);
-function backup(){try{localStorage.setItem('lt_backup',JSON.stringify({t:Date.now(),leads}))}catch(e){}}
+function backup(){try{localStorage.setItem('lt_backup',JSON.stringify({t:Date.now(),leads,scripts}))}catch(e){}}
 function getBackup(){try{const b=JSON.parse(localStorage.getItem('lt_backup'));return b&&Array.isArray(b.leads)&&b.leads.length?b:null}catch(e){return null}}
 function scheduleSave(){backup();dirty=true;setStatus();clearTimeout(saveT);saveT=setTimeout(saveNow,500)}
 async function saveNow(){
@@ -935,8 +1362,8 @@ function setStatus(){
 }
 async function loadFromHandle(){
   const f=await handle.getFile();lastMod=f.lastModified;
-  if(f.size===0){leads=[];}
-  else{const res=parseWb(XLSX.read(await f.arrayBuffer(),{cellDates:true}));if(!res.tracker)throw new Error('not-tracker');leads=res.leads}
+  if(f.size===0){leads=[];scripts=[];}
+  else{const res=parseWb(XLSX.read(await f.arrayBuffer(),{cellDates:true}));if(!res.tracker)throw new Error('not-tracker');leads=res.leads;scripts=res.scripts}
   undo=[];$('#bUndo').disabled=true;dirty=false;saveErr=null;backup();hideGate();fileButtons();render();setStatus();
 }
 function fileButtons(){
@@ -947,7 +1374,7 @@ function fileButtons(){
   else{b.innerHTML='<label class="btn small" style="cursor:pointer">Open Excel<input type="file" id="bOpenX" accept=".xlsx" hidden></label> <button class="btn small" id="bDl">Download Excel</button>';
     $('#bDl').onclick=()=>XLSX.writeFile(buildWb(),'leads.xlsx');
     $('#bOpenX').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const res=parseWb(XLSX.read(await f.arrayBuffer(),{cellDates:true}));
-      if(!res.tracker)return toast('Not a Lead Tracker file — use Paste leads → load an Excel file instead.');mutate(()=>{leads=res.leads},'Loaded '+f.name)};}
+      if(!res.tracker)return toast('Not a Lead Tracker file — use Paste leads → load an Excel file instead.');mutate(()=>{leads=res.leads;scripts=res.scripts},'Loaded '+f.name)};}
 }
 function showGate(kind,cancel,msg){
   const m=$('#gateM'),bk=getBackup();let h='';
@@ -973,10 +1400,10 @@ function showGate(kind,cancel,msg){
   });
   const create=async keep=>{
     let h;try{h=await showSaveFilePicker({suggestedName:'leads.xlsx',types:TYPES})}catch(e){return}
-    handle=h;await idbSet('handle',h);if(!keep)leads=[];undo=[];hideGate();fileButtons();render();dirty=true;await saveNow();
+    handle=h;await idbSet('handle',h);if(!keep){leads=[];scripts=[]}undo=[];hideGate();fileButtons();render();dirty=true;await saveNow();
   };
   on('gNew',()=>create(false));
-  on('gBk',()=>{leads=bk.leads;create(true)});
+  on('gBk',()=>{leads=bk.leads;scripts=bk.scripts||[];create(true)});
 }
 function hideGate(){$('#gate').classList.remove('show')}
 async function checkExternal(){
@@ -991,11 +1418,12 @@ setInterval(()=>{if(today()!==curDay){curDay=today();if(!document.querySelector(
 /* ---------- boot ---------- */
 (async function boot(){
   if(!FS){
-    const b=getBackup();if(b)leads=b.leads;
+    const b=getBackup();if(b){leads=b.leads;scripts=b.scripts||[]}
     const n=$('#browserNote');n.style.display='';n.textContent='This browser cannot save straight into an Excel file. Open this page in Chrome or Edge for the live Excel link. Until then your leads are kept in this browser — use Open Excel / Download Excel.';
-    fileButtons();render();setStatus();return;
+    fileButtons();render();setStatus();setView();return;
   }
   render();setStatus();
+  setView();
   handle=await idbGet('handle');
   if(!handle)return showGate('start');
   try{
